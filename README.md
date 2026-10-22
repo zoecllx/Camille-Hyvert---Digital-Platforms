@@ -28,7 +28,7 @@ Edit `js/data.js` only:
 
 - **Sessions**: dates, topics, speakers, and `open: true/false` to unlock a session's game.
 - **Readings**: `readings.prof[session]` and `readings.guest[session]` — set `url` to the real PDF/link.
-- **Game questions**: `games[session].rounds[i].questions` — each has `title`, `prompt`, `options`, `answer`, `explain`. For a typed answer, give `accept` (a list of accepted answers) instead of `options`. Question counts and max scores are calculated automatically, and questions are shuffled within each round on every play.
+- **Game questions**: `games[session].rounds[i].questions`. Round types: `choice` (`title`, `prompt`, `options`, `answer`, `explain`), `oldai` (`statement`, `answer: 'old' | 'ai'`, `explain`) and `higherlower` (`prompt`, `a`, `b` as `{ label, value, display }`, `explain`). Set the timer with `secondsPerQuestion`.
 
 Placeholders still to fill in are written in `[brackets]`.
 

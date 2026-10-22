@@ -7,7 +7,7 @@
   <meta name="description" content="Companion site for the Digital Platforms course, MSc Marketing Management & Digital, ESSEC Asia-Pacific.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Pinyon+Script&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -16,19 +16,19 @@
   <header class="site-header">
     <div class="container header-row">
       <a class="brand" href="#welcome">
-        <span class="brand-mark" aria-hidden="true">DP</span>
+        <span class="brand-mark" aria-hidden="true">dp</span>
         <span class="brand-text">
           <span class="brand-name">Digital Platforms Test Drive</span>
-          <span class="brand-sub">ESSEC Business School · Asia-Pacific campus</span>
+          <span class="brand-sub">ESSEC Business School · Asia-Pacific</span>
         </span>
       </a>
-      <nav class="main-nav" aria-label="Main menu">
-        <a href="#welcome" data-nav="welcome">Welcome</a>
-        <a href="#objectives" data-nav="objectives">Objectives</a>
-        <a href="#schedule" data-nav="schedule">Schedule</a>
-        <a href="#readings" data-nav="readings">Readings</a>
-        <a href="#game" data-nav="game">Game Hub</a>
-      </nav>
+      <div class="menu-wrap">
+        <button type="button" class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="menu-panel">
+          <span id="menu-current">Welcome</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+        </button>
+        <nav class="menu-panel" id="menu-panel" aria-label="Main menu" hidden></nav>
+      </div>
     </div>
   </header>
 
@@ -37,19 +37,22 @@
     <!-- WELCOME -->
     <section class="page" data-page="welcome">
       <div class="hero">
-        <p class="eyebrow">Welcome · MSc Marketing Management &amp; Digital</p>
-        <h1 class="display">Welcome to Digital Platforms Test Drive</h1>
+        <p class="eyebrow">MSc Marketing Management &amp; Digital</p>
+        <h1 class="display">Welcome to <em>Digital Platforms</em> Test Drive</h1>
         <p class="lead">The companion site for Madina Kalyayeva's course at ESSEC Asia-Pacific: course objectives, the session schedule, every reading, and a game to test what you learned after each class.</p>
         <div class="actions">
           <a class="btn btn-primary" href="#objectives">Explore the course</a>
-          <a class="btn btn-secondary" href="#game">Play Session 1's game</a>
+          <a class="btn btn-secondary" href="#game/1">Play Session 1</a>
         </div>
       </div>
-      <div class="card-grid">
-        <a class="tile" href="#objectives"><span class="tile-n">01</span><span class="tile-title">Course objectives</span><span class="tile-text">What you'll be able to do by the end.</span></a>
-        <a class="tile" href="#schedule"><span class="tile-n">02</span><span class="tile-title">Session schedule</span><span class="tile-text">Five sessions, dates and speakers.</span></a>
-        <a class="tile" href="#readings"><span class="tile-n">03</span><span class="tile-title">Readings</span><span class="tile-text">Lecture materials and guest lectures, by session.</span></a>
-        <a class="tile" href="#game"><span class="tile-n">04</span><span class="tile-title">Game Hub</span><span class="tile-text">4 rounds, 30 points, instant feedback.</span></a>
+      <div>
+        <p class="kicker section-label">The course, in four shades</p>
+        <div class="card-grid">
+          <a class="tile" href="#objectives"><span class="tile-swatch sw-peach" aria-hidden="true"></span><span class="tile-body"><span class="tile-n">01 · Peach</span><span class="tile-title">Course objectives</span><span class="tile-text">What you'll be able to do by the end.</span></span></a>
+          <a class="tile" href="#schedule"><span class="tile-swatch sw-apricot" aria-hidden="true"></span><span class="tile-body"><span class="tile-n">02 · Apricot</span><span class="tile-title">Session schedule</span><span class="tile-text">Five sessions, dates and speakers.</span></span></a>
+          <a class="tile" href="#readings/prof"><span class="tile-swatch sw-blush" aria-hidden="true"></span><span class="tile-body"><span class="tile-n">03 · Blush</span><span class="tile-title">Readings</span><span class="tile-text">Lecture materials and guest lectures, by session.</span></span></a>
+          <a class="tile" href="#game/1"><span class="tile-swatch sw-rose" aria-hidden="true"></span><span class="tile-body"><span class="tile-n">04 · Rose</span><span class="tile-title">Game Hub</span><span class="tile-text">Timed rounds, streaks and instant feedback.</span></span></a>
+        </div>
       </div>
     </section>
 
@@ -57,11 +60,11 @@
     <section class="page" data-page="objectives" hidden>
       <header class="page-head">
         <p class="eyebrow">Course objectives</p>
-        <h1 class="title">What you'll learn</h1>
+        <h1 class="title">What you'll <em>learn</em></h1>
         <p class="muted">By the end of the course, you should be able to:</p>
       </header>
       <div class="split">
-        <ol class="panel numbered" id="objectives-list"></ol>
+        <ol class="numbered" id="objectives-list"></ol>
         <aside class="aside-peach">
           <h2 class="h2">Course at a glance</h2>
           <dl class="glance" id="glance"></dl>
@@ -73,7 +76,7 @@
     <section class="page" data-page="schedule" hidden>
       <header class="page-head">
         <p class="eyebrow">Session schedule</p>
-        <h1 class="title">Five sessions, one semester</h1>
+        <h1 class="title">Five sessions, <em>one semester</em></h1>
       </header>
       <div class="panel table-wrap">
         <table class="schedule">
@@ -88,24 +91,22 @@
     <!-- READINGS -->
     <section class="page" data-page="readings" hidden>
       <header class="page-head">
-        <p class="eyebrow">Readings</p>
-        <h1 class="title">Course materials</h1>
+        <p class="eyebrow" id="read-eyebrow">Readings</p>
+        <h1 class="title" id="read-type-title"></h1>
       </header>
-      <div class="segmented" role="tablist" aria-label="Reading type" id="read-type-tabs"></div>
       <div class="panel">
         <div class="session-tabs" role="tablist" aria-label="Session" id="read-session-tabs"></div>
         <div class="panel-body">
           <p class="kicker" id="read-heading"></p>
           <h2 class="h2" id="read-title"></h2>
           <ul class="reading-list" id="reading-list"></ul>
-          <p class="muted" id="reading-empty" hidden></p>
+          <p class="empty-note" id="reading-empty" hidden></p>
         </div>
       </div>
     </section>
 
     <!-- GAME HUB -->
     <section class="page" data-page="game" hidden>
-      <div class="pill-tabs" role="tablist" aria-label="Game sessions" id="hub-tabs"></div>
       <div class="hero hero-split">
         <div class="hero-main">
           <p class="eyebrow" id="hub-eyebrow"></p>
@@ -117,53 +118,79 @@
       <div class="panel" id="hub-rounds-panel">
         <div class="panel-head">
           <div>
-            <h2 class="h2">Game structure</h2>
-            <p class="muted small">Instant feedback after every answer.</p>
+            <h2 class="h2" id="hub-rounds-title">Four rounds, <em>one clock</em></h2>
+            <p class="muted small">Timed questions · streaks · instant feedback</p>
           </div>
-          <a class="btn btn-primary" href="#play" id="start-game">Start the game</a>
+          <a class="btn btn-primary" href="#play">Start the game</a>
         </div>
         <ol class="rounds" id="hub-rounds"></ol>
       </div>
-      <div class="panel panel-body muted" id="hub-empty" hidden></div>
+      <div class="panel panel-body empty-note" id="hub-empty" hidden></div>
     </section>
 
-    <!-- QUESTION -->
+    <!-- PLAY -->
     <section class="page narrow" data-page="play" hidden>
-      <div class="progress-row">
-        <a class="btn btn-secondary btn-sm" href="#game">Exit</a>
-        <span class="small strong muted" id="q-round"></span>
-        <div class="progress" role="progressbar" aria-label="Game progress" aria-valuemin="0" id="q-progress"><div class="progress-fill" id="q-progress-fill"></div></div>
-        <span class="small muted">Score <strong class="ink" id="q-score">0 / 30</strong></span>
+      <div class="hud">
+        <a class="btn btn-ghost btn-sm" href="#game">Exit</a>
+        <span class="hud-round" id="hud-round"></span>
+        <span class="streak" id="hud-streak" hidden>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 3 4 5 4 9a4 4 0 0 1-8 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 0-8z"></path></svg>
+          <span id="hud-streak-n"></span>
+        </span>
+        <span class="hud-score">Score <strong id="hud-score">0</strong></span>
+        <button type="button" class="icon-btn" id="sound-btn" aria-pressed="true" aria-label="Sound on">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"></path><path class="wave" d="M15.5 8.5a5 5 0 0 1 0 7"></path><path class="wave" d="M19 5a10 10 0 0 1 0 14"></path></svg>
+        </button>
       </div>
-      <div class="panel panel-body question">
-        <p class="kicker" id="q-count"></p>
-        <h1 class="title-sm" id="q-title"></h1>
-        <p class="muted" id="q-prompt"></p>
-        <div class="answers" id="q-answers"></div>
-        <div class="feedback" id="q-feedback" aria-live="polite" hidden></div>
-        <div class="q-footer" id="q-footer" hidden>
-          <button type="button" class="btn btn-primary" id="q-next">Next question</button>
+      <div class="dots" id="dots" aria-hidden="true"></div>
+
+      <!-- Round intro -->
+      <div class="panel round-intro" id="round-intro" hidden>
+        <p class="eyebrow" id="ri-n"></p>
+        <h1 class="title" id="ri-name"></h1>
+        <p class="lead" id="ri-how"></p>
+        <p class="kicker" id="ri-meta"></p>
+        <button type="button" class="btn btn-primary" id="ri-go">Let's go</button>
+      </div>
+
+      <!-- Question stage -->
+      <div class="panel stage" id="stage" hidden>
+        <div class="timer" aria-hidden="true"><div class="timer-fill" id="timer-fill"></div></div>
+        <div class="stage-body">
+          <div class="stage-top">
+            <p class="kicker" id="q-count"></p>
+            <span class="time-left" id="time-left" aria-live="off"></span>
+          </div>
+          <div id="q-area"></div>
+          <div class="feedback" id="q-feedback" aria-live="polite" hidden></div>
+          <div class="q-footer" id="q-footer" hidden>
+            <span class="kicker">Press Enter</span>
+            <button type="button" class="btn btn-primary" id="q-next">Next</button>
+          </div>
         </div>
+        <div class="fx" id="fx" aria-hidden="true"></div>
       </div>
     </section>
 
     <!-- RESULTS -->
     <section class="page narrow" data-page="results" hidden>
-      <div class="panel">
+      <div class="confetti" id="confetti" aria-hidden="true"></div>
+      <div class="panel result-card">
         <div class="result-top">
-          <svg class="ring" width="140" height="140" viewBox="0 0 140 140" role="img" id="ring" aria-label="Score">
-            <circle cx="70" cy="70" r="60" fill="none" stroke="#F4D8CB" stroke-width="10"></circle>
-            <circle id="ring-arc" cx="70" cy="70" r="60" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" stroke-dasharray="0 377" transform="rotate(-90 70 70)"></circle>
-            <text x="70" y="68" text-anchor="middle" class="ring-num" id="ring-num">0</text>
-            <text x="70" y="92" text-anchor="middle" class="ring-sub" id="ring-sub">of 30 pts</text>
+          <svg class="ring" width="150" height="150" viewBox="0 0 140 140" role="img" id="ring" aria-label="Score">
+            <circle cx="70" cy="70" r="60" fill="none" stroke="#F4E6DE" stroke-width="6"></circle>
+            <circle id="ring-arc" cx="70" cy="70" r="60" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-dasharray="0 377" transform="rotate(-90 70 70)"></circle>
+            <text x="70" y="74" text-anchor="middle" class="ring-num" id="ring-num">0</text>
+            <text x="70" y="96" text-anchor="middle" class="ring-sub" id="ring-sub"></text>
           </svg>
           <div class="result-text">
-            <p class="kicker" id="r-kicker"></p>
+            <p class="eyebrow" id="r-kicker"></p>
             <h1 class="title-sm" id="r-badge"></h1>
             <p class="muted" id="r-message"></p>
+            <div class="stats" id="r-stats"></div>
             <div class="actions">
               <a class="btn btn-primary" href="#play" id="play-again">Play again</a>
-              <a class="btn btn-secondary" href="#readings">Review the readings</a>
+              <a class="btn btn-secondary" href="#readings/prof">Review the readings</a>
             </div>
           </div>
         </div>
@@ -179,20 +206,20 @@
     <section class="page narrow" data-page="locked" hidden>
       <div class="panel panel-body locked">
         <span class="lock-icon" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
         </span>
         <p class="kicker" id="locked-n"></p>
-        <h1 class="title-sm">This session's game is not open yet</h1>
+        <h1 class="title-sm">This session's game is <em>not open yet</em></h1>
         <p class="muted">It unlocks after class. Come back once the session has taken place.</p>
-        <a class="btn btn-secondary" href="#game">Back to Game Hub</a>
+        <a class="btn btn-secondary" href="#game/1">Back to Game Hub</a>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="container footer-row">
-      <span>Digital Platforms Test Drive · MSc Marketing Management &amp; Digital · ESSEC Business School</span>
-      <span>Built by Camille Hyvert</span>
+      <span><span class="footer-name">Digital Platforms Test Drive</span> · MSc Marketing Management &amp; Digital · ESSEC Business School</span>
+      <span class="footer-credit">Built by Camille Hyvert</span>
     </div>
   </footer>
 

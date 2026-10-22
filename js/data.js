@@ -3,18 +3,9 @@
    Anything in [brackets] is a placeholder still to be filled in.
 ------------------------------------------------------------------- */
 
-// The 10 platform types from Session 1, shared by every Platform Matchmaker question
-var PLATFORM_TYPES = ['Social Media Marketing', 'Influencer & Creator Marketing', 'Content Marketing & GenAI Production', 'Email, CRM & Messaging', 'Search: SEO, SEM & GEO', 'Programmatic & Retail Media', 'Affiliate & Social Commerce', 'Mobile Marketing & Super-apps', 'Marketing Automation & AI Agents', 'Marketing Analytics & Measurement'];
-
-// Small helpers so each question below stays on a few lines
-function match(title, answer, explain) {
-  return { title: title, prompt: 'Which platform type does this belong to?', options: PLATFORM_TYPES, answer: answer, explain: explain };
-}
-function higherLower(title, guess, answer, reveal, explain) {
-  return { title: title, prompt: 'Our guess: ' + guess + '. Is the real figure higher or lower?', options: ['Higher', 'Lower'], answer: answer, explain: 'Real figure: ' + reveal + '. ' + explain };
-}
-function oldOrAi(title, answer, explain) {
-  return { title: title, prompt: 'Is this how marketing worked before AI, or part of the AI shift?', options: ['Before AI', 'The AI Shift'], answer: answer, explain: explain };
+// Small helpers so each question below fits on a few lines
+function hl(prompt, guess, guessValue, real, realValue, explain) {
+  return { prompt: prompt, a: { label: 'Our guess', value: guessValue, display: guess }, b: { label: 'Real figure', value: realValue, display: real }, explain: explain };
 }
 function pick(options, prompt) {
   return function (title, answer, explain) { return { title: title, prompt: prompt, options: options, answer: answer, explain: explain }; };
@@ -78,69 +69,88 @@ window.COURSE = {
     }
   },
 
-  /* Games, keyed by session number. Each round has questions; `points` per question.
-     A question has title, prompt, options, answer, explain.
-     A typed-answer question has `accept` (a list of accepted answers) instead of `options`.
-     The question count and the max score are calculated from the questions. */
+  /* Games, keyed by session number.
+     Round types:
+       'choice'      — pick one option.   { title, prompt, options[], answer, explain }
+       'oldai'       — Old way or AI way? { statement, answer: 'old' | 'ai', explain }
+       'higherlower' — is B higher or lower than A?
+                       { prompt, a: { label, value, display }, b: { label, value, display }, explain }
+     Rounds with no questions yet are listed on the hub but skipped when playing. */
   games: {
     1: {
+      secondsPerQuestion: 20,
       takeaway: 'Platforms evolve quickly — stay updated and adapt to new tools in an AI-driven industry.',
       rounds: [
-        { name: 'Platform Matchmaker', desc: 'Match each case to one of the 10 platform types', points: 1,
+        { name: 'Platform Matchmaker', desc: 'Match each case to one of the 10 platform types', type: 'choice', points: 1,
+          how: 'Read the case, pick the platform type. Beat the clock.',
           questions: [
-            match("Agoda's 2025 Singapore flight ads, made in-house with GenAI (Veo, Runway, Kling)", 'Social Media Marketing',
-              'The ads ran on YouTube, Meta and TikTok, so this was the paid social example. GenAI was how they were produced; social feeds were where they ran.'),
-            match('La Roche-Posay beauty influencers hosting live Instagram tutorials in Singapore', 'Influencer & Creator Marketing',
-              "Trusted creators give social proof. Singapore's influencer spend grew 12.9% to US$119M in 2025."),
-            match("Cathay Pacific's blog of travel guides to Asian destinations", 'Content Marketing & GenAI Production',
-              "Useful organic content that builds long-term engagement, and it's the kind of content AI answer engines quote."),
-            match('Zalora\'s "Wishlist Reminders"', 'Email, CRM & Messaging',
-              'Retention built on 1st-party data: a personalised nudge back to the items customers saved.'),
-            match('Lazada Google Ads targeting "best Ramadan discounts" in Indonesia', 'Search: SEO, SEM & GEO',
-              'Paid search (SEM) captures high-intent demand at the moment people are looking.'),
-            match('WPP Media × GrabAds using anonymised transaction + location signals across 6 SEA markets', 'Programmatic & Retail Media',
-              'Retail media puts ads next to real purchase data, planned and bought at scale.'),
-            match("Guardian's Singapore beauty influencers embedding referral links in their vlogs", 'Affiliate & Social Commerce',
-              'Referral links mean pay-for-performance, which is the core of affiliate marketing.'),
-            match('Nestlé × Lazada piloting the LazzieChat AI shopping assistant', 'Mobile Marketing & Super-apps',
-              "An AI assistant inside the super-app's own shopping experience (SG, MY, ID – Apr 2026)."),
-            match('Singapore Airlines × Salesforce Agentforce for customer service', 'Marketing Automation & AI Agents',
-              'Agentforce-powered AI tools scale customer service around the clock (Mar 2025).'),
-            match('Lazada using Adobe Analytics across Southeast Asia', 'Marketing Analytics & Measurement',
-              'Enterprise analytics across SEA. The more AI buys media for you, the more you need independent proof of what worked.')
+            { title: "Agoda's 2025 Singapore flight ads, made in-house with GenAI (Veo, Runway, Kling)", prompt: 'Which platform type does this belong to?',
+              answer: 'Social Media Marketing',
+              explain: 'The ads ran on YouTube, Meta and TikTok, so this was the paid social example. GenAI was how they were produced; social feeds were where they ran.' },
+            { title: 'La Roche-Posay beauty influencers hosting live Instagram tutorials in Singapore', prompt: 'Which platform type does this belong to?',
+              answer: 'Influencer & Creator Marketing',
+              explain: "Trusted creators give social proof. Singapore's influencer spend grew 12.9% to US$119M in 2025." },
+            { title: "Cathay Pacific's blog of travel guides to Asian destinations", prompt: 'Which platform type does this belong to?',
+              answer: 'Content Marketing & GenAI Production',
+              explain: "Useful organic content that builds long-term engagement, and it's the kind of content AI answer engines quote." },
+            { title: 'Zalora\'s "Wishlist Reminders"', prompt: 'Which platform type does this belong to?',
+              answer: 'Email, CRM & Messaging',
+              explain: 'Retention built on 1st-party data: a personalised nudge back to the items customers saved.' },
+            { title: 'Lazada Google Ads targeting "best Ramadan discounts" in Indonesia', prompt: 'Which platform type does this belong to?',
+              answer: 'Search: SEO, SEM & GEO',
+              explain: 'Paid search (SEM) captures high-intent demand at the moment people are looking.' },
+            { title: 'WPP Media × GrabAds using anonymised transaction + location signals across 6 SEA markets', prompt: 'Which platform type does this belong to?',
+              answer: 'Programmatic & Retail Media',
+              explain: 'Retail media puts ads next to real purchase data, planned and bought at scale.' },
+            { title: "Guardian's Singapore beauty influencers embedding referral links in their vlogs", prompt: 'Which platform type does this belong to?',
+              answer: 'Affiliate & Social Commerce',
+              explain: 'Referral links mean pay-for-performance, which is the core of affiliate marketing.' },
+            { title: 'Nestlé × Lazada piloting the LazzieChat AI shopping assistant', prompt: 'Which platform type does this belong to?',
+              answer: 'Mobile Marketing & Super-apps',
+              explain: "An AI assistant inside the super-app's own shopping experience (SG, MY, ID – Apr 2026)." },
+            { title: 'Singapore Airlines × Salesforce Agentforce for customer service', prompt: 'Which platform type does this belong to?',
+              answer: 'Marketing Automation & AI Agents',
+              explain: 'Agentforce-powered AI tools scale customer service around the clock (Mar 2025).' },
+            { title: 'Lazada using Adobe Analytics across Southeast Asia', prompt: 'Which platform type does this belong to?',
+              answer: 'Marketing Analytics & Measurement',
+              explain: 'Enterprise analytics across SEA. The more AI buys media for you, the more you need independent proof of what worked.' }
           ] },
-        { name: 'Higher or Lower: Singapore 2026', desc: 'Market figures, head to head', points: 1,
+        { name: 'Higher or Lower: Singapore 2026', desc: 'Market figures, head to head', type: 'higherlower', points: 1,
+          how: 'Is the real figure higher or lower than our guess? Use the buttons or your ↑ ↓ keys.',
           questions: [
-            higherLower("Share of Singapore's population using social media", '75%', 'Higher', '90.6% (5.33 million users)', 'Almost everyone is reachable on social.'),
-            higherLower('Share of adults (18+) in Singapore using social media', '99%', 'Lower', '95.3%', 'Very high, but not quite everyone.'),
-            higherLower('Hours a week Singaporeans spend on social media', '10 hours', 'Higher', '~17 hours, across 7.4 platforms', "That's over 2 hours a day, spread across many platforms."),
-            higherLower('Singaporeans who use ChatGPT every month', '1 in 10', 'Higher', '1 in 3', 'AI assistants are now a mainstream channel for discovery.'),
-            higherLower('Share of AI referral traffic in Singapore that comes from ChatGPT', '50%', 'Higher', '75%+', 'ChatGPT dominates AI referrals, so track it as a traffic source in your analytics.'),
-            higherLower("Online adults in Singapore worried about what's real vs fake online", '85%', 'Lower', '71.1%', 'Still a large majority. Trust is the new currency: label AI content and protect authenticity.'),
-            higherLower('Mobile connections in Singapore, as a % of the population', '100%', 'Higher', '166% (9.79M connections)', 'Many people have more than one connection (work phone, tablet, smartwatch).'),
-            higherLower('Singapore influencer marketing spend in 2025', 'US$200M', 'Lower', 'US$119M (+12.9%)', "It's smaller than you might think, but it's growing fast."),
-            higherLower('Video & live commerce share of SEA platform e-commerce GMV in 2025', '20%', 'Higher', '32% (up from 20%)', "20% was last year's share. Shoppable video and LIVE are growing quickly."),
-            higherLower('Click rate on search results WITH an AI summary (vs 15% without)', '15%', 'Lower', '8% (Pew, 2025)', "When the AI answers first, people click less. That's why brands now compete to be cited (GEO).")
+            hl("Share of Singapore's population using social media", '75%', 75, '90.6%', 90.6, '5.33 million users: almost everyone is reachable on social.'),
+            hl('Share of adults (18+) in Singapore using social media', '99%', 99, '95.3%', 95.3, 'Very high, but not quite everyone.'),
+            hl('Hours a week Singaporeans spend on social media', '10 h', 10, '~17 h', 17, "Across 7.4 platforms: that's over 2 hours a day."),
+            hl('Singaporeans who use ChatGPT every month', '1 in 10', 10, '1 in 3', 33, 'AI assistants are now a mainstream channel for discovery.'),
+            hl('Share of AI referral traffic in Singapore that comes from ChatGPT', '50%', 50, '75%+', 75, 'ChatGPT dominates AI referrals, so track it as a traffic source in your analytics.'),
+            hl("Online adults in Singapore worried about what's real vs fake online", '85%', 85, '71.1%', 71.1, 'Still a large majority. Trust is the new currency: label AI content and protect authenticity.'),
+            hl('Mobile connections in Singapore, as a % of the population', '100%', 100, '166%', 166, '9.79M connections: many people have more than one (work phone, tablet, smartwatch).'),
+            hl('Singapore influencer marketing spend in 2025', 'US$200M', 200, 'US$119M', 119, "Up 12.9%: smaller than you might think, but growing fast."),
+            hl('Video & live commerce share of SEA platform e-commerce GMV in 2025', '20%', 20, '32%', 32, "20% was last year's share. Shoppable video and LIVE are growing quickly."),
+            hl('Click rate on search results WITH an AI summary (vs 15% without)', '15%', 15, '8%', 8, "Pew, 2025. When the AI answers first, people click less, so brands now compete to be cited (GEO).")
           ] },
-        { name: 'Old Way vs AI Way', desc: 'How AI changes each workflow', points: 1,
+        { name: 'Old Way vs AI Way', desc: 'How AI changes each workflow', type: 'oldai', points: 1,
+          how: 'Old way or AI way? Use the buttons or your ← → keys.',
           questions: [
-            oldOrAi('Picking audiences by location, job title, interests, age', 'Before AI', 'Manual targeting: you chose the audience yourself.'),
-            oldOrAi('Meta Advantage+, Google PMax, TikTok Smart+ find the audience; your creative is the targeting', 'The AI Shift', 'AI buying picks audience, placement and budget. You set the goals, data and creative.'),
-            oldOrAi('Search engines list links that users click', 'Before AI', 'The classic "ten blue links" era.'),
-            oldOrAi('AI Overviews and ChatGPT answer first; brands compete to be cited (GEO)', 'The AI Shift', 'Search → Answers. Generative Engine Optimisation is about being the brand the AI names.'),
-            oldOrAi('One ad made per campaign', 'Before AI', 'One idea, one execution.'),
-            oldOrAi('GenAI turns one idea into hundreds of ad versions', 'The AI Shift', 'Production → GenAI: Veo, Runway, Kling, Firefly and TikTok Symphony version ideas in days.'),
-            oldOrAi('Ads only in feeds and search results', 'Before AI', 'The traditional ad inventory.'),
-            oldOrAi('Ads in Google AI Overviews (SG, Dec 2025) and ChatGPT Ads (SG, Sep 2026)', 'The AI Shift', 'AI answers have become a new kind of ad space.')
+            { statement: 'Picking audiences by location, job title, interests, age', answer: 'old', explain: 'Manual targeting: you chose the audience yourself.' },
+            { statement: 'Meta Advantage+, Google PMax, TikTok Smart+ find the audience; your creative is the targeting', answer: 'ai', explain: 'AI buying picks audience, placement and budget. You set the goals, data and creative.' },
+            { statement: 'Search engines list links that users click', answer: 'old', explain: 'The classic "ten blue links" era.' },
+            { statement: 'AI Overviews and ChatGPT answer first; brands compete to be cited (GEO)', answer: 'ai', explain: 'Search → Answers. Generative Engine Optimisation is about being the brand the AI names.' },
+            { statement: 'One ad made per campaign', answer: 'old', explain: 'One idea, one execution.' },
+            { statement: 'GenAI turns one idea into hundreds of ad versions', answer: 'ai', explain: 'Production → GenAI: Veo, Runway, Kling, Firefly and TikTok Symphony version ideas in days.' },
+            { statement: 'Ads only in feeds and search results', answer: 'old', explain: 'The traditional ad inventory.' },
+            { statement: 'Ads in Google AI Overviews (SG, Dec 2025) and ChatGPT Ads (SG, Sep 2026)', answer: 'ai', explain: 'AI answers have become a new kind of ad space.' }
           ] },
-        { name: 'Bonus Question', desc: 'One final question, double points', points: 2,
+        { name: 'Bonus Question', desc: 'One final question, double points', type: 'choice', points: 2,
+          how: 'One last question — worth double.',
           questions: [
-            { title: 'Name the 8th benchmarking metric added for the AI era', prompt: 'Type your answer. Hint: how often do ChatGPT, Gemini and Perplexity mention your brand?',
-              accept: ['ai visibility', 'visibility', 'ai share of voice', 'share of ai answers'], answer: 'AI Visibility',
+            { title: 'Which benchmarking metric was added as the 8th, for the AI era?', prompt: 'Choose one.',
+              options: ['AI Visibility', 'Engagement', 'Awareness', 'Relationship'],
+              answer: 'AI Visibility',
               explain: 'AI Visibility = share of AI answers mentioning your brand, AI-assistant referral traffic, and sentiment in AI summaries.' }
           ] }
       ],
-      // score thresholds (percentage) → badge
+      // percentage thresholds → badge
       badges: [
         { min: 80, name: 'AI-Era Marketing Pro', message: "Impressive. You'd brief an agency on AI-era platforms tomorrow." },
         { min: 50, name: 'Platform Strategist', message: 'Solid grasp of the landscape — review the readings to close the gaps.' },
@@ -149,9 +159,11 @@ window.COURSE = {
     },
 
     2: {
+      secondsPerQuestion: 20,
       takeaway: 'Pick tools that share clean data with each other — AI is only as good as what it can connect to. Then ship it: Design → Build → Deploy.',
       rounds: [
-        { name: 'Which File Do I Open?', desc: 'HTML is the words, CSS the look, JS the behaviour', points: 1,
+        { name: 'Which File Do I Open?', desc: 'HTML is the words, CSS the look, JS the behaviour', type: 'choice', points: 1,
+          how: 'index.html, styles.css or script.js? Pick the file you would edit.',
           questions: [
             whichFile('Change the text on your main button', 'index.html', 'The words people read live in the HTML.'),
             whichFile('Make that button orange', 'styles.css', 'Colours, fonts and spacing belong to CSS.'),
@@ -162,7 +174,8 @@ window.COURSE = {
             whichFile('Change the font of every heading on the site', 'styles.css', 'One CSS rule like h1, h2 { font-family: … } changes them all.'),
             whichFile("Keep track of a player's score", 'script.js', 'Stored values (state) that change while you play live in JS, like the score in this game.')
           ] },
-        { name: 'Git & Deploy Lingo', desc: 'Fork, clone, commit, push, pull request, merge', points: 1,
+        { name: 'Git & Deploy Lingo', desc: 'Fork, clone, commit, push, pull request, merge', type: 'choice', points: 1,
+          how: 'Match each description to the right GitHub term.',
           questions: [
             gitTerm("Make your own copy of someone else's repo on your GitHub account", 'Fork', 'You can change a fork without affecting the original.'),
             gitTerm('Copy a repo from GitHub down onto your computer to edit the files locally', 'Clone', 'Clone = GitHub → your laptop.'),
@@ -173,7 +186,8 @@ window.COURSE = {
             gitTerm("You're working solo on your own branch and you're confident. Fastest way to get it online?", 'Push', 'Direct action, no waiting for approval.'),
             gitTerm('Each one of these gets its own Vercel preview link', 'Pull Request', 'Your team can see the changes live before merging.')
           ] },
-        { name: 'Build the Martech Stack', desc: 'Point tools, platforms, suites, hubs and AI agents', points: 1,
+        { name: 'Build the Martech Stack', desc: 'Point tools, platforms, suites, hubs and AI agents', type: 'choice', points: 1,
+          how: 'Point tool, platform, suite, hub, or the new AI layer?',
           questions: [
             stackType('Mailchimp for email campaigns', 'Point tool', 'Built for one specific marketing function.'),
             stackType('Meltwater or Brand24 for social listening', 'Point tool', 'Best in class for one job, and most now have built-in AI features.'),
@@ -186,7 +200,8 @@ window.COURSE = {
             stackType('Pro: the provider handles integration. Con: add-on modules may not be best in class.', 'Suite', 'Suites trade best-in-class features for compatibility.'),
             stackType('Pro: custom apps and extensions via API. Con: dependence on a single vendor.', 'Platform', 'Flexible, but slower to implement and risky to rely on.')
           ] },
-        { name: 'Whose Ad Tool Is It?', desc: 'TikTok, Meta, LinkedIn, YouTube or X', points: 1,
+        { name: 'Whose Ad Tool Is It?', desc: 'TikTok, Meta, LinkedIn, YouTube or X', type: 'choice', points: 1,
+          how: 'Each feature belongs to one ad manager. Which one?',
           questions: [
             adTool('Symphony: AI makes and translates videos', 'TikTok', 'TikTok Symphony also generates avatars and localises videos.'),
             adTool('Spark Ads: boost organic posts directly from creators', 'TikTok', "It turns creators' best posts into ads."),
@@ -199,10 +214,12 @@ window.COURSE = {
             adTool('Skippable in-stream: skip after 5 sec, pay on a 30-sec view or a click', 'YouTube', 'The classic YouTube format.'),
             adTool('Grok writes ad copy & visuals from your URL, then reviews results', 'X', 'Grok inside X Ads Manager.')
           ] },
-        { name: 'Bonus Question', desc: 'One final question, double points', points: 2,
+        { name: 'Bonus Question', desc: 'One final question, double points', type: 'choice', points: 2,
+          how: 'One last question — worth double.',
           questions: [
-            { title: 'Every time you ____ to GitHub, Vercel rebuilds your live site automatically', prompt: 'Type the missing word. Hint: it comes after commit.',
-              accept: ['push', 'git push', 'pushing'], answer: 'Push',
+            { title: 'Every time you ____ to GitHub, Vercel rebuilds your live site automatically', prompt: 'Which word fills the blank?',
+              options: ['Push', 'Commit', 'Clone', 'Fork'],
+              answer: 'Push',
               explain: 'Connect your repo to Vercel once. After that, every push redeploys the site, so you never upload anything by hand again.' }
           ] }
       ],
@@ -212,15 +229,8 @@ window.COURSE = {
         { min: 0, name: 'Git Hatchling', message: 'A good start. Replay the lingo round and it will stick.' }
       ]
     }
-  }
-};
+  },
 
-// Fill in each round's question count and each game's max score from the questions above
-Object.keys(window.COURSE.games).forEach(function (n) {
-  var game = window.COURSE.games[n];
-  game.maxScore = 0;
-  game.rounds.forEach(function (r) {
-    r.count = r.questions.length;
-    game.maxScore += r.count * r.points;
-  });
-});
+  // The 10 platform types — default options for 'choice' questions that don't list their own
+  platformTypes: ['Social Media Marketing', 'Influencer & Creator Marketing', 'Content Marketing & GenAI Production', 'Email, CRM & Messaging', 'Search: SEO, SEM & GEO', 'Programmatic & Retail Media', 'Affiliate & Social Commerce', 'Mobile Marketing & Super-apps', 'Marketing Automation & AI Agents', 'Marketing Analytics & Measurement']
+};
