@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Game Hub · Digital Platforms Test Drive</title>
+  <meta name="description" content="Interactive games to revise each session of Digital Platforms Test Drive, MSc Marketing Management & Digital, ESSEC Business School.">
+
+  <!-- Fonts: Fraunces (soft, peachy serif for headings) + DM Sans (clean body text) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,800;1,9..144,600&display=swap" rel="stylesheet">
+
+  <style>
+    /* =====================================================================
+       1. DESIGN TOKENS (CSS variables)
+       Change a colour here and it changes everywhere on the site.
+       Palette inspired by the "Peach Fuzz" moodboard: peach, blush, sunset
+       pinks, a hot-pink accent, and deep berry for readable text.
+       ===================================================================== */
+    :root {
+      /* Backgrounds */
+      --cream:        #FFF8F3;
+      --peach-50:     #FFF1EA;
+      --peach-100:    #FFE4D6;
+      --peach-fuzz:   #FFBE98;   /* Pantone 13-1023 Peach Fuzz */
+      --blush:        #F9CFD3;
+      --pink-200:     #FBD3DC;
+      --pink-300:     #F7A6BB;
+
+      /* Accents */
+      --hot-pink:      #EC4C82;  /* decorative accent (borders, hearts, glows) */
+      --hot-pink-deep: #C81E5B;  /* buttons with white text (passes contrast) */
+      --coral:         #FF8A7A;
+
+      /* Text */
+      --berry-900: #3B0D28;      /* main text */
+      --berry-700: #6E1F4A;      /* secondary text */
+      --berry-500: #95486F;      /* muted text */
+
+      /* Feedback (always paired with an icon, never colour alone) */
+      --ok:     #17775A;
+      --ok-bg:  #E2F5EC;
+      --bad:    #B4233F;
+      --bad-bg: #FDE3E8;
+
+      /* Shape & depth */
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius:    16px;
+      --radius-sm: 12px;
+      --shadow-soft: 0 12px 32px -14px rgba(110, 31, 74, 0.35);
+      --shadow-pop:  0 18px 40px -12px rgba(200, 30, 91, 0.45);
+
+      /* Type */
+      --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+      --font-body:    "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+      /* Motion */
+      --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* =====================================================================
+       2. BASE STYLES
+       ===================================================================== */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--berry-900);
+      background-color: var(--cream);
+      /* Soft "sunset through curtains" glow, like the moodboard */
+      background-image:
+        radial-gradient(60rem 30rem at 110% -10%, rgba(255, 190, 152, 0.55), transparent 60%),
+        radial-gradient(50rem 30rem at -10% 20%, rgba(247, 166, 187, 0.35), transparent 60%),
+        radial-gradient(40rem 30rem at 50% 110%, rgba(255, 228, 214, 0.9), transparent 60%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1, h2, h3 {
+      font-family: var(--font-display);
+      line-height: 1.15;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+
+    button { font: inherit; color: inherit; }
+
+    /* Visible focus for keyboard users: a thick hot-pink ring.
+       :focus-visible only shows it for keyboard navigation, not mouse clicks. */
+    :focus-visible {
+      outline: 3px solid var(--hot-pink-deep);
+      outline-offset: 3px;
+      border-radius: 10px;
+    }
+
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px; height: 1px;
+      overflow: hidden; clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    .skip-link {
+      position: absolute; left: 16px; top: -60px;
+      background: var(--berry-900); color: #fff;
+      padding: 10px 16px; border-radius: 999px;
+      z-index: 100; text-decoration: none; font-weight: 700;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 12px; }
+
+    .wrap {
+      width: 100%;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* =====================================================================
+       3. HEADER
+       ===================================================================== */
+    .site-header { padding: 28px 0 0; }
+
+    .header-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .eyebrow {
+      margin: 0 0 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--berry-500);
+    }
+
+    .site-title {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+    }
+    .site-title em {
+      font-style: italic;
+      font-weight: 600;
+      color: var(--hot-pink-deep);
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--berry-700);
+      font-weight: 500;
+    }
+
+    /* Sound on/off toggle */
+    .sound-toggle {
+      flex-shrink: 0;
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 2px solid var(--pink-300);
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s var(--ease-bounce);
+    }
+    .sound-toggle:hover { background: var(--pink-200); transform: translateY(-2px); }
+    .sound-toggle[aria-pressed="false"] { opacity: 0.7; }
+
+    /* =====================================================================
+       4. TABS
+       ===================================================================== */
+    .tabs {
+      position: relative;   /* so tab.offsetLeft is measured from the strip */
+      display: flex;
+      gap: 10px;
+      margin-top: 24px;
+      padding: 6px 4px 14px;
+      overflow-x: auto;              /* swipe sideways on a phone */
+      scroll-snap-type: x mandatory;
+      scrollbar-width: thin;
+    }
+
+    .tab {
+      scroll-snap-align: start;
+      flex-shrink: 0;
+      display: flex; flex-direction: column; align-items: flex-start;
+      gap: 2px;
+      min-width: 150px;
+      padding: 10px 18px 12px;
+      border: 2px solid var(--pink-200);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.75);
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.25s, border-color 0.25s, transform 0.25s var(--ease-bounce), box-shadow 0.25s;
+    }
+    .tab:hover { transform: translateY(-3px); border-color: var(--pink-300); box-shadow: var(--shadow-soft); }
+
+    .tab-num {
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--berry-500);
+    }
+    .tab-title { font-weight: 700; font-size: 0.95rem; }
+
+    /* The selected tab (aria-selected is set by JavaScript) */
+    .tab[aria-selected="true"] {
+      background: linear-gradient(135deg, var(--hot-pink-deep), var(--hot-pink));
+      border-color: transparent;
+      color: #fff;
+      box-shadow: var(--shadow-pop);
+    }
+    .tab[aria-selected="true"] .tab-num { color: rgba(255, 255, 255, 0.85); }
+
+    .tab.is-soon .tab-title { color: var(--berry-500); }
+    .tab.is-soon .tab-title::after { content: " ⏳"; }
+
+    /* =====================================================================
+       5. PANELS (one per tab) + smooth tab transition
+       ===================================================================== */
+    main { flex: 1; padding: 8px 0 40px; }
+
+    .panel[hidden] { display: none; }
+    .panel.is-entering { animation: panel-in 0.45s var(--ease-out); }
+
+    @keyframes panel-in {
+      from { opacity: 0; transform: translateY(14px) scale(0.99); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .session-head {
+      background: linear-gradient(135deg, var(--peach-fuzz), var(--pink-300));
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      padding: 26px 28px 30px;
+      position: relative;
+      overflow: hidden;
+    }
+    /* decorative sun glow in the corner */
+    .session-head::after {
+      content: "";
+      position: absolute; right: -60px; top: -60px;
+      width: 200px; height: 200px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 246, 224, 0.9), rgba(255, 246, 224, 0) 70%);
+      pointer-events: none;
+    }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .chip {
+      background: rgba(255, 255, 255, 0.65);
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .session-title { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; max-width: 22ch; }
+    .session-summary { margin: 10px 0 0; max-width: 60ch; color: var(--berry-700); font-weight: 500; }
+
+    .game-card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(6px);
+      border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+      box-shadow: var(--shadow-soft);
+      padding: 28px;
+      min-height: 360px;
+    }
+
+    /* =====================================================================
+       6. BUTTONS (shared)
+       ===================================================================== */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      border: none;
+      border-radius: 999px;
+      padding: 13px 26px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.25s var(--ease-bounce), box-shadow 0.25s, background 0.25s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--hot-pink-deep), #DB2F6C);
+      color: #fff;
+      box-shadow: 0 8px 18px -8px rgba(200, 30, 91, 0.7);
+    }
+    .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: var(--shadow-pop); }
+    .btn-primary:active { transform: translateY(0) scale(0.98); }
+    .btn-ghost {
+      background: transparent;
+      border: 2px solid var(--pink-300);
+      color: var(--berry-900);
+    }
+    .btn-ghost:hover { background: var(--pink-200); transform: translateY(-2px); }
+
+    /* =====================================================================
+       7. GAME SCREENS
+       ===================================================================== */
+    .stage > * { animation: panel-in 0.4s var(--ease-out); }
+
+    .stage-heading { font-size: clamp(1.3rem, 3vw, 1.7rem); font-weight: 800; }
+    .stage-heading:focus { outline: none; }
+    .stage-heading:focus-visible { outline: 3px solid var(--hot-pink-deep); }
+
+    /* --- Intro & round intro --- */
+    .round-list {
+      list-style: none; padding: 0; margin: 20px 0 26px;
+      display: grid; gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    }
+    .round-list li {
+      background: var(--peach-50);
+      border: 2px solid var(--peach-100);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+    }
+    .round-list .r-emoji { font-size: 1.5rem; display: block; }
+    .round-list .r-name { font-weight: 700; display: block; }
+    .round-list .r-meta { font-size: 0.85rem; color: var(--berry-500); }
+
+    .round-intro { text-align: center; padding: 20px 0; }
+    .round-intro .big-emoji {
+      font-size: 4rem; display: inline-block;
+      animation: wobble 2.4s ease-in-out infinite;
+    }
+    .round-intro p { max-width: 52ch; margin: 12px auto 24px; color: var(--berry-700); }
+
+    @keyframes wobble {
+      0%, 100% { transform: rotate(-6deg) scale(1); }
+      50%      { transform: rotate(6deg) scale(1.08); }
+    }
+
+    /* --- HUD: round, progress bar, score --- */
+    .hud {
+      display: flex; align-items: center; gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+    .hud-round { font-weight: 700; font-size: 0.9rem; color: var(--berry-700); }
+    .progress {
+      flex: 1; min-width: 120px;
+      height: 10px;
+      background: var(--peach-100);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress > span {
+      display: block; height: 100%;
+      background: linear-gradient(90deg, var(--peach-fuzz), var(--hot-pink));
+      border-radius: inherit;
+      transition: width 0.5s var(--ease-out);
+    }
+    .score-pill {
+      background: var(--berry-900); color: #fff;
+      border-radius: 999px; padding: 6px 14px;
+      font-weight: 700; font-size: 0.9rem;
+      white-space: nowrap;
+    }
+    .score-pill.bump { animation: bump 0.5s var(--ease-bounce); }
+    @keyframes bump {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.25); background: var(--hot-pink-deep); }
+      100% { transform: scale(1); }
+    }
+
+    /* --- Question --- */
+    .q-kicker { margin: 0 0 6px; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--berry-500); }
+    .q-prompt { font-size: clamp(1.15rem, 2.6vw, 1.45rem); font-weight: 600; max-width: 46ch; }
+    .q-prompt:focus { outline: none; }
+
+    .choices {
+      display: grid;
+      gap: 10px;
+      margin-top: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+    .choice {
+      position: relative;
+      text-align: left;
+      background: #fff;
+      border: 2px solid var(--pink-200);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s var(--ease-bounce), background 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.3s;
+    }
+    .choice:hover:not(:disabled) {
+      transform: translateY(-3px);
+      background: var(--peach-50);
+      border-color: var(--hot-pink);
+      box-shadow: var(--shadow-soft);
+    }
+    .choice:active:not(:disabled) { transform: scale(0.97); }
+    .choice:disabled { cursor: default; opacity: 0.45; }
+
+    /* After answering, correct/wrong keep full opacity + an icon */
+    .choice.is-correct, .choice.is-wrong { opacity: 1; }
+    .choice.is-correct { background: var(--ok-bg); border-color: var(--ok); color: var(--ok); }
+    .choice.is-wrong   { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); animation: shake 0.4s; }
+    .choice.is-correct::after, .choice.is-wrong::after {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      font-weight: 800;
+    }
+    .choice.is-correct::after { content: "✓"; }
+    .choice.is-wrong::after   { content: "✗"; }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    /* Higher / Lower */
+    .guess-card {
+      margin-top: 18px;
+      display: inline-flex; flex-direction: column; gap: 2px;
+      background: linear-gradient(135deg, var(--peach-100), var(--pink-200));
+      border-radius: var(--radius-lg);
+      padding: 16px 24px;
+    }
+    .guess-card span { font-size: 0.85rem; font-weight: 700; color: var(--berry-700); }
+    .guess-card strong { font-family: var(--font-display); font-size: clamp(2rem, 6vw, 2.8rem); line-height: 1.1; }
+    .choices-higherlower { grid-template-columns: 1fr 1fr; max-width: 460px; }
+    .choices-higherlower .choice { text-align: center; font-size: 1.1rem; padding: 16px; }
+
+    /* Sort board: two buckets that fill up as you play */
+    .sort-board {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      margin-top: 20px;
+    }
+    .bucket {
+      background: var(--peach-50);
+      border: 2px dashed var(--pink-300);
+      border-radius: var(--radius-lg);
+      padding: 10px;
+      min-height: 140px;
+    }
+    .bucket .choice { width: 100%; text-align: center; font-size: 1.05rem; padding: 14px; }
+    .bucket ul { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 6px; }
+    .bucket li {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      box-shadow: 0 2px 6px -3px rgba(110, 31, 74, 0.3);
+    }
+    .bucket li.chip-in { animation: chip-in 0.5s var(--ease-bounce); }
+    @keyframes chip-in {
+      from { opacity: 0; transform: translateY(-20px) scale(0.8); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* Text answer (bonus) */
+    .text-answer { margin-top: 20px; max-width: 520px; }
+    .text-answer label { font-weight: 700; display: block; margin-bottom: 6px; }
+    .text-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .text-row input {
+      flex: 1; min-width: 200px;
+      font: inherit;
+      padding: 12px 16px;
+      border: 2px solid var(--pink-300);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--berry-900);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .text-row input:focus { outline: none; border-color: var(--hot-pink-deep); box-shadow: 0 0 0 4px var(--pink-200); }
+    .hint { font-size: 0.85rem; color: var(--berry-500); margin: 8px 0 0; }
+
+    /* Feedback box */
+    .feedback { margin-top: 18px; }
+    .feedback:empty { display: none; }
+    .feedback-box {
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      animation: panel-in 0.35s var(--ease-out);
+    }
+    .feedback-box.ok  { background: var(--ok-bg);  border-left: 6px solid var(--ok); }
+    .feedback-box.bad { background: var(--bad-bg); border-left: 6px solid var(--bad); }
+    .feedback-box .fb-title { margin: 0 0 4px; font-weight: 800; }
+    .feedback-box.ok  .fb-title { color: var(--ok); }
+    .feedback-box.bad .fb-title { color: var(--bad); }
+    .feedback-box p { margin: 0; }
+
+    .q-actions { margin-top: 18px; display: flex; justify-content: flex-end; }
+    .q-actions [hidden] { display: none; }
+
+    /* --- Final screen --- */
+    .final { text-align: center; padding: 10px 0; }
+    .badge {
+      width: 150px; height: 150px; margin: 10px auto 14px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      background: conic-gradient(from 0deg, var(--peach-fuzz), var(--hot-pink), var(--pink-300), var(--peach-fuzz));
+      animation: spin-in 0.9s var(--ease-bounce);
+      position: relative;
+    }
+    .badge::before {
+      content: ""; position: absolute; inset: 10px; border-radius: 50%;
+      background: var(--cream);
+    }
+    .badge span { position: relative; font-size: 3.6rem; }
+    @keyframes spin-in {
+      from { transform: scale(0) rotate(-180deg); }
+      to   { transform: scale(1) rotate(0); }
+    }
+    .badge-name { font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 800; color: var(--hot-pink-deep); }
+    .final-score { font-size: 1.15rem; font-weight: 700; margin: 8px 0; }
+    .final-score .count { font-family: var(--font-display); font-size: 2.4rem; }
+    .final-blurb { max-width: 52ch; margin: 0 auto; color: var(--berry-700); }
+
+    .breakdown {
+      list-style: none; padding: 0;
+      margin: 22px auto; max-width: 520px;
+      display: grid; gap: 6px; text-align: left;
+    }
+    .breakdown li {
+      display: flex; justify-content: space-between; gap: 10px;
+      background: var(--peach-50); border-radius: var(--radius-sm);
+      padding: 8px 14px; font-size: 0.92rem;
+    }
+
+    .takeaway {
+      margin: 22px auto; max-width: 600px;
+      background: linear-gradient(135deg, var(--peach-100), var(--pink-200));
+      border-radius: var(--radius-lg);
+      padding: 18px 22px;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.15rem;
+    }
+    .takeaway .eyebrow { font-family: var(--font-body); font-style: normal; }
+
+    /* =====================================================================
+       8. COMING SOON PLACEHOLDER
+       ===================================================================== */
+    .soon { text-align: center; padding: 40px 10px; }
+    .soon-fruit { font-size: 2.6rem; display: flex; justify-content: center; gap: 18px; }
+    .soon-fruit span { display: inline-block; animation: float 2.2s ease-in-out infinite; }
+    .soon-fruit span:nth-child(2) { animation-delay: 0.25s; }
+    .soon-fruit span:nth-child(3) { animation-delay: 0.5s; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(-4deg); }
+      50%      { transform: translateY(-16px) rotate(4deg); }
+    }
+    .soon h2 {
+      margin-top: 18px;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      background: linear-gradient(90deg, var(--hot-pink-deep), var(--coral), var(--hot-pink-deep));
+      background-size: 200% auto;
+      -webkit-background-clip: text; background-clip: text;
+      color: transparent;
+      animation: shimmer 3s linear infinite;
+    }
+    @keyframes shimmer { to { background-position: 200% center; } }
+    .soon p { color: var(--berry-700); }
+    .dots { display: flex; justify-content: center; gap: 8px; margin-top: 16px; }
+    .dots span {
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--hot-pink);
+      animation: dot 1.2s ease-in-out infinite;
+    }
+    .dots span:nth-child(2) { animation-delay: 0.15s; background: var(--coral); }
+    .dots span:nth-child(3) { animation-delay: 0.3s;  background: var(--peach-fuzz); }
+    @keyframes dot {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+      40%           { transform: scale(1);   opacity: 1; }
+    }
+
+    /* =====================================================================
+       9. "PHOTO POP" + FLYING HEARTS
+       ===================================================================== */
+    .photo-pop {
+      position: fixed; inset: 0;
+      display: grid; place-items: center;
+      pointer-events: none;           /* never blocks clicks */
+      z-index: 50;
+    }
+    .polaroid {
+      margin: 0;
+      background: #fff;
+      padding: 12px 12px 14px;
+      border-radius: 6px;
+      box-shadow: 0 30px 60px -20px rgba(59, 13, 40, 0.55);
+      width: min(240px, 60vw);
+      transform: scale(0);
+      opacity: 0;
+    }
+    .polaroid img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 3px; }
+    .polaroid figcaption {
+      font-family: var(--font-display); font-style: italic; font-weight: 600;
+      text-align: center; margin-top: 8px; font-size: 1.15rem;
+    }
+    .photo-pop.show .polaroid { animation: photo-pop 1.7s var(--ease-out) forwards; }
+    @keyframes photo-pop {
+      0%   { transform: scale(0.2) rotate(-18deg); opacity: 0; }
+      18%  { transform: scale(1.12) rotate(5deg);  opacity: 1; }
+      28%  { transform: scale(1) rotate(-3deg);    opacity: 1; }
+      78%  { transform: scale(1) rotate(-3deg);    opacity: 1; }
+      100% { transform: scale(0.85) rotate(-3deg) translateY(-40px); opacity: 0; }
+    }
+
+    .heart {
+      position: fixed;
+      pointer-events: none;
+      z-index: 60;
+      color: var(--hot-pink);
+      font-size: 1.2rem;
+      animation: heart-fly 0.95s var(--ease-out) forwards;
+    }
+    @keyframes heart-fly {
+      from { transform: translate(-50%, -50%) scale(0.4); opacity: 1; }
+      to   { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.2) rotate(var(--rot)); opacity: 0; }
+    }
+
+    /* =====================================================================
+       10. FOOTER
+       ===================================================================== */
+    .site-footer {
+      padding: 22px 0 30px;
+      color: var(--berry-700);
+      font-size: 0.9rem;
+    }
+    .site-footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .site-footer strong { color: var(--berry-900); }
+
+    /* =====================================================================
+       11. RESPONSIVE (phones)
+       ===================================================================== */
+    @media (max-width: 640px) {
+      .site-header { padding-top: 18px; }
+      .header-top { flex-direction: column-reverse; }
+      .sound-toggle { align-self: flex-end; }
+      .session-head { padding: 20px 18px 24px; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+      .game-card { padding: 20px 16px; border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+      .choices { grid-template-columns: 1fr; }
+      .choices-higherlower { grid-template-columns: 1fr 1fr; }
+      .sort-board { grid-template-columns: 1fr; }
+      .q-actions .btn { width: 100%; }
+      .tab { min-width: 130px; }
+    }
+
+    /* Respect users who prefer less motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to the games</a>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="site-header">
+    <div class="wrap">
+      <div class="header-top">
+        <div>
+          <p class="eyebrow">ESSEC Asia campus · Taught by Madina Kalyayeva</p>
+          <h1 class="site-title">Digital Platforms Test Drive <em>– Game Hub</em></h1>
+          <p class="subtitle">MSc Marketing Management &amp; Digital · ESSEC Business School</p>
+        </div>
+        <!-- aria-pressed tells screen readers whether the toggle is on -->
+        <button id="sound-toggle" class="sound-toggle" type="button" aria-pressed="true">
+          <span aria-hidden="true">🔊</span> <span class="label">Sound on</span>
+        </button>
+      </div>
+
+      <!-- Tabs are created by JavaScript from the SESSIONS data (see buildTabs) -->
+      <div id="tablist" class="tabs" role="tablist" aria-label="Sessions"></div>
+    </div>
+  </header>
+
+  <!-- ===================== MAIN ===================== -->
+  <main id="main">
+    <!-- One panel per session is created here by JavaScript -->
+    <div id="panels" class="wrap"></div>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <span><strong>Digital Platforms Test Drive</strong> · MSc Marketing Management &amp; Digital · ESSEC Business School</span>
+      <span>Built by <strong id="built-by">[MY NAME]</strong></span>
+    </div>
+  </footer>
+
+  <!-- The polaroid that "pops" on streaks and at the end (decorative) -->
+  <div id="photo-pop" class="photo-pop" aria-hidden="true"></div>
+
+  <script>
+  "use strict";
+
+  /* ###########################################################################
+     PART A — DATA
+     Everything you might want to edit lives in this part.
+     The game logic below (Part B) reads this data and builds the page from it.
+     ########################################################################### */
+
+  /* ---------- A1. Site settings ---------- */
+  const SITE = {
+    builtBy: "[MY NAME]",          // ← put your name here
+
+    // Photos that "pop" on a 3-in-a-row streak and on the final screen.
+    // "peach", "sunset" and "hearts" are built-in drawings (see ILLUSTRATIONS).
+    // To use your own photo: put it next to this file and add its file name,
+    // e.g. ["me-with-a-peach.jpg", "peach"]
+    popPhotos: ["peach", "sunset", "hearts"],
+
+    streakForPop: 3                // how many correct answers in a row trigger a photo pop
+  };
+
+  /* ---------- A2. Sessions ----------
+     ONE OBJECT = ONE TAB. The tabs, panels and games are all generated from this array.
+
+     Each session has "rounds". A round has a "type", and every type is played
+     by the same engine, so a new session needs NO new game code:
+
+       type: "match"        → pick the right option for each item
+                              { options: [...], items: [{ prompt, answer, explain }] }
+       type: "higherlower"  → we show a guess, the player says higher or lower
+                              { items: [{ prompt, guess, answer: "higher"|"lower", reveal, explain }] }
+       type: "sort"         → drop each statement into one of two buckets
+                              { buckets: [A, B], items: [{ prompt, answer: A|B, explain }] }
+       type: "text"         → the player types an answer (great for a bonus)
+                              { items: [{ prompt, accept: [...], answer, hint, explain }] }
+
+     Optional on any round: points (default 1 per correct answer).
+  */
+  const SESSIONS = [
+
+    /* ======================== SESSION 1 ======================== */
+    {
+      id: "s1",
+      tabLabel: "Session 1",
+      shortTitle: "Platforms in the AI Era",
+      title: "Digital Marketing Platforms in the AI Era",
+      date: "2 Oct 2026",
+      speaker: "Madina Kalyayeva",
+      summary: "The 10 types of digital marketing platforms, Singapore's 2026 numbers, and how AI is changing targeting, search and production.",
+      rounds: [
+        {
+          type: "match",
+          title: "Platform Matchmaker",
+          emoji: "💘",
+          instructions: "Match each real campaign to the type of digital marketing platform it was the class example for.",
+          options: [
+            "Social Media Marketing",
+            "Influencer & Creator Marketing",
+            "Content Marketing & GenAI Production",
+            "Email, CRM & Messaging",
+            "Search: SEO, SEM & GEO",
+            "Programmatic & Retail Media",
+            "Affiliate & Social Commerce",
+            "Mobile Marketing & Super-apps",
+            "Marketing Automation & AI Agents",
+            "Marketing Analytics & Measurement"
+          ],
+          items: [
+            { prompt: "Agoda's 2025 Singapore flight ads, made in-house with GenAI (Veo, Runway, Kling)",
+              answer: "Social Media Marketing",
+              explain: "The ads ran on YouTube, Meta and TikTok, so this was the paid social example. GenAI was how they were produced; social feeds were where they ran." },
+            { prompt: "La Roche-Posay beauty influencers hosting live Instagram tutorials in Singapore",
+              answer: "Influencer & Creator Marketing",
+              explain: "Trusted creators give social proof. Singapore's influencer spend grew 12.9% to US$119M in 2025." },
+            { prompt: "Cathay Pacific's blog of travel guides to Asian destinations",
+              answer: "Content Marketing & GenAI Production",
+              explain: "Useful organic content that builds long-term engagement, and it's the kind of content AI answer engines quote." },
+            { prompt: "Zalora's \"Wishlist Reminders\"",
+              answer: "Email, CRM & Messaging",
+              explain: "Retention built on 1st-party data: a personalised nudge back to the items customers saved." },
+            { prompt: "Lazada Google Ads targeting \"best Ramadan discounts\" in Indonesia",
+              answer: "Search: SEO, SEM & GEO",
+              explain: "Paid search (SEM) captures high-intent demand at the moment people are looking." },
+            { prompt: "WPP Media × GrabAds using anonymised transaction + location signals across 6 SEA markets",
+              answer: "Programmatic & Retail Media",
+              explain: "Retail media puts ads next to real purchase data, planned and bought at scale." },
+            { prompt: "Guardian's Singapore beauty influencers embedding referral links in their vlogs",
+              answer: "Affiliate & Social Commerce",
+              explain: "Referral links mean pay-for-performance, which is the core of affiliate marketing." },
+            { prompt: "Nestlé × Lazada piloting the LazzieChat AI shopping assistant",
+              answer: "Mobile Marketing & Super-apps",
+              explain: "An AI assistant inside the super-app's own shopping experience (SG, MY, ID – Apr 2026)." },
+            { prompt: "Singapore Airlines × Salesforce Agentforce for customer service",
+              answer: "Marketing Automation & AI Agents",
+              explain: "Agentforce-powered AI tools scale customer service around the clock (Mar 2025)." },
+            { prompt: "Lazada using Adobe Analytics across Southeast Asia",
+              answer: "Marketing Analytics & Measurement",
+              explain: "Enterprise analytics across SEA. The more AI buys media for you, the more you need independent proof of what worked." }
+          ]
+        },
+        {
+          type: "higherlower",
+          title: "Higher or Lower: Singapore 2026",
+          emoji: "📈",
+          instructions: "We show you a guess. Is the real Singapore number higher or lower?",
+          items: [
+            { prompt: "Share of Singapore's population using social media",
+              guess: "75%", answer: "higher", reveal: "90.6% (5.33 million users)",
+              explain: "Almost everyone is reachable on social." },
+            { prompt: "Share of adults (18+) in Singapore using social media",
+              guess: "99%", answer: "lower", reveal: "95.3%",
+              explain: "Very high, but not quite everyone." },
+            { prompt: "Hours a week Singaporeans spend on social media",
+              guess: "10 hours", answer: "higher", reveal: "~17 hours, across 7.4 platforms",
+              explain: "That's over 2 hours a day, spread across many platforms." },
+            { prompt: "Singaporeans who use ChatGPT every month",
+              guess: "1 in 10", answer: "higher", reveal: "1 in 3",
+              explain: "AI assistants are now a mainstream channel for discovery." },
+            { prompt: "Share of AI referral traffic in Singapore that comes from ChatGPT",
+              guess: "50%", answer: "higher", reveal: "75%+",
+              explain: "ChatGPT dominates AI referrals, so track it as a traffic source in your analytics." },
+            { prompt: "Online adults in Singapore worried about what's real vs fake online",
+              guess: "85%", answer: "lower", reveal: "71.1%",
+              explain: "Still a large majority. Trust is the new currency: label AI content and protect authenticity." },
+            { prompt: "Mobile connections in Singapore, as a % of the population",
+              guess: "100%", answer: "higher", reveal: "166% (9.79M connections)",
+              explain: "Many people have more than one connection (work phone, tablet, smartwatch)." },
+            { prompt: "Singapore influencer marketing spend in 2025",
+              guess: "US$200M", answer: "lower", reveal: "US$119M (+12.9%)",
+              explain: "It's smaller than you might think, but it's growing fast." },
+            { prompt: "Video & live commerce share of SEA platform e-commerce GMV in 2025",
+              guess: "20%", answer: "higher", reveal: "32% (up from 20%)",
+              explain: "20% was last year's share. Shoppable video and LIVE are growing quickly." },
+            { prompt: "Click rate on search results WITH an AI summary (vs 15% without)",
+              guess: "15%", answer: "lower", reveal: "8% (Pew, 2025)",
+              explain: "When the AI answers first, people click less. That's why brands now compete to be cited (GEO)." }
+          ]
+        },
+        {
+          type: "sort",
+          title: "Old Way vs AI Way",
+          emoji: "🔀",
+          instructions: "Sort each statement: is it how marketing worked before AI, or part of the AI shift?",
+          buckets: ["Before AI", "The AI Shift"],
+          items: [
+            { prompt: "Picking audiences by location, job title, interests, age",
+              answer: "Before AI",
+              explain: "Manual targeting: you chose the audience yourself." },
+            { prompt: "Meta Advantage+, Google PMax, TikTok Smart+ find the audience; your creative is the targeting",
+              answer: "The AI Shift",
+              explain: "AI buying picks audience, placement and budget. You set the goals, data and creative." },
+            { prompt: "Search engines list links that users click",
+              answer: "Before AI",
+              explain: "The classic \"ten blue links\" era." },
+            { prompt: "AI Overviews and ChatGPT answer first; brands compete to be cited (GEO)",
+              answer: "The AI Shift",
+              explain: "Search → Answers. Generative Engine Optimisation is about being the brand the AI names." },
+            { prompt: "One ad made per campaign",
+              answer: "Before AI",
+              explain: "One idea, one execution." },
+            { prompt: "GenAI turns one idea into hundreds of ad versions",
+              answer: "The AI Shift",
+              explain: "Production → GenAI: Veo, Runway, Kling, Firefly and TikTok Symphony version ideas in days." },
+            { prompt: "Ads only in feeds and search results",
+              answer: "Before AI",
+              explain: "The traditional ad inventory." },
+            { prompt: "Ads in Google AI Overviews (SG, Dec 2025) and ChatGPT Ads (SG, Sep 2026)",
+              answer: "The AI Shift",
+              explain: "AI answers have become a new kind of ad space." }
+          ]
+        },
+        {
+          type: "text",
+          title: "Bonus Question",
+          emoji: "✨",
+          points: 2,
+          instructions: "Worth double points. Type your answer.",
+          items: [
+            { prompt: "Benchmarking: name the 8th metric type added for the AI era.",
+              accept: ["ai visibility", "visibility", "ai share of voice", "share of ai answers"],
+              answer: "AI Visibility",
+              hint: "Think: how often do ChatGPT, Gemini & Perplexity mention your brand?",
+              explain: "AI Visibility = share of AI answers mentioning your brand, AI-assistant referral traffic, and sentiment in AI summaries." }
+          ]
+        }
+      ],
+      badges: [
+        { min: 0,  emoji: "🌱", name: "Platform Rookie",       blurb: "You've got the basics. Replay a round and you'll level up quickly." },
+        { min: 50, emoji: "🎯", name: "Campaign Strategist",   blurb: "Solid! You know your platforms and your numbers." },
+        { min: 80, emoji: "👑", name: "AI-Era Marketing Pro",  blurb: "Impressive. You'd brief an agency on AI-era platforms tomorrow." }
+      ],
+      takeaway: "Platforms evolve quickly — stay updated and adapt to new tools in an AI-driven industry."
+    },
+
+    /* ======================== SESSION 2 ======================== */
+    {
+      id: "s2",
+      tabLabel: "Session 2",
+      shortTitle: "Vibe Coding & Martech",
+      title: "Vibe Coding + Digital Marketing Tools",
+      date: "9 Oct 2026",
+      speaker: "Guest: LaunchLab · Madina Kalyayeva",
+      summary: "LaunchLab's Design → Build → Deploy workflow (Claude Design, Claude Code, GitHub, Vercel), then the martech stack: point tools, platforms, suites, hubs and AI agents.",
+      rounds: [
+        {
+          type: "match",
+          title: "Which File Do I Open?",
+          emoji: "🗂️",
+          instructions: "HTML = the words and structure. CSS = the look. JS = the behaviour. Which file would you open?",
+          options: ["index.html", "styles.css", "script.js"],
+          items: [
+            { prompt: "Change the text on your main button",
+              answer: "index.html", explain: "The words people read live in the HTML." },
+            { prompt: "Make that button orange",
+              answer: "styles.css", explain: "Colours, fonts and spacing belong to CSS." },
+            { prompt: "Make the button do something when it's clicked",
+              answer: "script.js", explain: "Behaviour (clicks, typing, submit) is JavaScript, using addEventListener." },
+            { prompt: "Stack the layout into one column on a phone",
+              answer: "styles.css", explain: "A CSS media query changes the layout on small screens." },
+            { prompt: "Add a new heading and paragraph to the About section",
+              answer: "index.html", explain: "New structure (headings, paragraphs) goes in HTML." },
+            { prompt: "Show \"Correct!\" when someone submits an answer",
+              answer: "script.js", explain: "Reacting to a submit is behaviour, so it's JS." },
+            { prompt: "Change the font of every heading on the site",
+              answer: "styles.css", explain: "One CSS rule like h1, h2 { font-family: … } changes them all." },
+            { prompt: "Keep track of a player's score",
+              answer: "script.js", explain: "Stored values (state) that change while you play live in JS, just like the score in this game." }
+          ]
+        },
+        {
+          type: "match",
+          title: "Git & Deploy Lingo",
+          emoji: "🐙",
+          instructions: "Match each description to the right GitHub term.",
+          options: ["Fork", "Clone", "Commit", "Push", "Pull Request", "Merge"],
+          items: [
+            { prompt: "Make your own copy of someone else's repo on your GitHub account",
+              answer: "Fork", explain: "You can change a fork without affecting the original." },
+            { prompt: "Copy a repo from GitHub down onto your computer to edit the files locally",
+              answer: "Clone", explain: "Clone = GitHub → your laptop." },
+            { prompt: "Save a snapshot of your changes with a short note. It's only on your computer for now.",
+              answer: "Commit", explain: "A commit saves locally, NOT on GitHub yet." },
+            { prompt: "Send the commits saved on your computer up to GitHub",
+              answer: "Push", explain: "Push updates the online copy, and Vercel then redeploys your site." },
+            { prompt: "Propose your changes and ask teammates to review them first",
+              answer: "Pull Request", explain: "A PR is a request for review. Others can comment, suggest, approve or reject." },
+            { prompt: "Approve a pull request and combine it into the main version",
+              answer: "Merge", explain: "Merging brings the reviewed changes into main." },
+            { prompt: "You're working solo on your own branch and you're confident. Fastest way to get it online?",
+              answer: "Push", explain: "Direct action, no waiting for approval." },
+            { prompt: "Each one of these gets its own Vercel preview link",
+              answer: "Pull Request", explain: "Your team can see the changes live before merging." }
+          ]
+        },
+        {
+          type: "match",
+          title: "Build the Martech Stack",
+          emoji: "🧱",
+          instructions: "Point tool, platform, suite, hub, or the new AI layer? Classify each tool or description.",
+          options: ["Point tool", "Platform", "Suite", "Hub", "AI copilot / agent"],
+          items: [
+            { prompt: "Mailchimp for email campaigns",
+              answer: "Point tool", explain: "Built for one specific marketing function." },
+            { prompt: "Meltwater or Brand24 for social listening",
+              answer: "Point tool", explain: "Best in class for one job, and most now have built-in AI features." },
+            { prompt: "Salesforce Data 360 (formerly Data Cloud), a customer data platform",
+              answer: "Platform", explain: "Covers a broad range in 1–2 areas, offered as services through an API." },
+            { prompt: "Oracle Eloqua, Adobe Marketo Engage, HubSpot",
+              answer: "Suite", explain: "Several products from one provider, with integration built in (and now AI agents like HubSpot Breeze)." },
+            { prompt: "A central portal unifying operations, collaboration, data integration and analytics",
+              answer: "Hub", explain: "Those are the hub's 4 capabilities." },
+            { prompt: "Meta Business Agent answering questions and closing sales on WhatsApp",
+              answer: "AI copilot / agent", explain: "Agents take a goal, plan the steps and act across tools (1M+ businesses, Jun 2026)." },
+            { prompt: "ChatGPT, Claude or Gemini drafting your briefs, copy and reports",
+              answer: "AI copilot / agent", explain: "Copilots help marketers work faster, sitting on top of the rest of the stack." },
+            { prompt: "Pro: quick to set up for one well-defined task. Con: one more vendor to manage.",
+              answer: "Point tool", explain: "Classic point-tool trade-off." },
+            { prompt: "Pro: the provider handles integration. Con: add-on modules may not be best in class.",
+              answer: "Suite", explain: "Suites trade best-in-class features for compatibility." },
+            { prompt: "Pro: custom apps and extensions via API. Con: dependence on a single vendor.",
+              answer: "Platform", explain: "Flexible, but slower to implement and risky to rely on." }
+          ]
+        },
+        {
+          type: "match",
+          title: "Whose Ad Tool Is It?",
+          emoji: "📣",
+          instructions: "Each feature belongs to one ad manager. Which one?",
+          options: ["TikTok", "Meta", "LinkedIn", "YouTube", "X"],
+          items: [
+            { prompt: "Symphony: AI makes and translates videos",
+              answer: "TikTok", explain: "TikTok Symphony also generates avatars and localises videos." },
+            { prompt: "Spark Ads: boost organic posts directly from creators",
+              answer: "TikTok", explain: "It turns creators' best posts into ads." },
+            { prompt: "Advantage+ Creative: GenAI makes image, text & video variations",
+              answer: "Meta", explain: "Part of Meta's Advantage+ automation." },
+            { prompt: "Business Agent: an AI agent selling on WhatsApp, IG & Messenger",
+              answer: "Meta", explain: "Launched June 2026." },
+            { prompt: "Accelerate: AI builds and auto-optimises B2B campaigns",
+              answer: "LinkedIn", explain: "LinkedIn's AI campaign builder." },
+            { prompt: "Lead Gen Forms: capture leads without users leaving the app",
+              answer: "LinkedIn", explain: "A favourite for B2B lead generation." },
+            { prompt: "Thought Leader Ads: promote your employees' posts in the feed",
+              answer: "LinkedIn", explain: "Brand and employee voices, boosted." },
+            { prompt: "Peak Points (Gemini): ads placed right after a video's most engaging moment",
+              answer: "YouTube", explain: "AI chooses the moment when attention is highest." },
+            { prompt: "Skippable in-stream: skip after 5 sec, pay on a 30-sec view or a click",
+              answer: "YouTube", explain: "The classic YouTube format." },
+            { prompt: "Grok writes ad copy & visuals from your URL, then reviews results",
+              answer: "X", explain: "Grok inside X Ads Manager." }
+          ]
+        },
+        {
+          type: "text",
+          title: "Bonus Question",
+          emoji: "🚀",
+          points: 2,
+          instructions: "Worth double points. Type one word.",
+          items: [
+            { prompt: "Fill in the blank: every time you ____ to GitHub, Vercel rebuilds your live site automatically.",
+              accept: ["push", "git push", "pushing", "push code"],
+              answer: "Push",
+              hint: "It's the step after commit.",
+              explain: "Connect your repo to Vercel once. After that, every push redeploys the site, so you never upload anything by hand again." }
+          ]
+        }
+      ],
+      badges: [
+        { min: 0,  emoji: "🐣", name: "Git Hatchling",          blurb: "Good start! Replay the lingo round and it'll stick." },
+        { min: 50, emoji: "🧩", name: "Stack Builder",          blurb: "You can talk tools with devs and martech vendors." },
+        { min: 80, emoji: "🚀", name: "Vibe-Coding Martech Pro", blurb: "Design → Build → Deploy, and you know what's in the stack." }
+      ],
+      takeaway: "Pick tools that share clean data with each other — AI is only as good as what it can connect to. Then ship it: Design → Build → Deploy."
+    },
+
+    /* =====================================================================
+       👇👇  STEP 1 — WHERE TO PASTE A NEW SESSION  👇👇
+       Replace one of the "coming soon" objects below with a full session
+       object. Easiest way: copy the whole SESSION 2 block above (from its
+       opening { to its closing },) and change:
+         id         → "s3"  (must be unique, used for the tab and the URL #s3)
+         tabLabel, shortTitle, title, date, speaker, summary
+         rounds     → reuse the types: "match", "higherlower", "sort", "text"
+         badges     → 3 levels: min 0, min 50, min 80 (percent of max score)
+         takeaway   → one sentence shown on the final screen
+       Delete  comingSoon: true  and the game appears automatically.
+       ===================================================================== */
+    { id: "s3", tabLabel: "Session 3", shortTitle: "Coming soon", comingSoon: true },
+    { id: "s4", tabLabel: "Session 4", shortTitle: "Coming soon", comingSoon: true },
+    { id: "s5", tabLabel: "Session 5", shortTitle: "Coming soon", comingSoon: true }
+    /* 👆👆  To add even more tabs, add another { id: "s6", ... } line here.  */
+  ];
+
+
+  /* ###########################################################################
+     PART B — GAME ENGINE
+     You shouldn't need to edit below this line to add a session.
+     ########################################################################### */
+
+  /* ---------- B1. Small helpers ---------- */
+
+  // Shortcut for document.querySelector
+  const $ = (selector, root = document) => root.querySelector(selector);
+
+  // Does the user prefer less motion? (We then skip flying hearts and count-ups.)
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Make text safe before putting it inside innerHTML
+  function escapeHTML(text) {
+    return String(text)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+
+  // Fisher–Yates shuffle: returns a NEW shuffled array (the original is untouched),
+  // so "Play again" gives a different order every time.
+  function shuffle(array) {
+    const copy = [...array];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  // Lowercase + remove punctuation/extra spaces, so "A.I. Visibility!" ≈ "ai visibility"
+  function normalise(text) {
+    return text.toLowerCase().replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " ").trim();
+  }
+
+  // localStorage can throw in private mode, so we always wrap it in try/catch
+  const store = {
+    get(key) { try { return localStorage.getItem(key); } catch (e) { return null; } },
+    set(key, value) { try { localStorage.setItem(key, value); } catch (e) { /* ignore */ } }
+  };
+
+
+  /* ---------- B2. Sound effects (Web Audio API — no sound files needed!) ----------
+     An oscillator is a tiny synthesiser: we give it a frequency (pitch in Hz),
+     a wave type, and a volume envelope that fades in and out quickly.        */
+  const Sound = {
+    enabled: store.get("gamehub-sound") !== "off",
+    ctx: null,
+
+    // Browsers only allow audio after a user click, so we create it lazily
+    getContext() {
+      if (!this.ctx) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return null;
+        this.ctx = new AudioCtx();
+      }
+      if (this.ctx.state === "suspended") this.ctx.resume();
+      return this.ctx;
+    },
+
+    // Play one note. start = delay in seconds, slideTo = optional pitch glide
+    note(freq, start, duration, type = "sine", volume = 0.18, slideTo = null) {
+      if (!this.enabled) return;
+      const ctx = this.getContext();
+      if (!ctx) return;
+      const t0 = ctx.currentTime + start;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, t0);
+      if (slideTo) osc.frequency.exponentialRampToValueAtTime(slideTo, t0 + duration);
+      gain.gain.setValueAtTime(0.0001, t0);
+      gain.gain.exponentialRampToValueAtTime(volume, t0 + 0.015);     // quick fade in
+      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);  // smooth fade out
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(t0);
+      osc.stop(t0 + duration + 0.05);
+    },
+
+    click()   { this.note(660, 0, 0.06, "triangle", 0.06); },
+    correct() { this.note(784, 0, 0.14); this.note(1175, 0.09, 0.3); },              // "ding-ding!"
+    wrong()   { this.note(330, 0, 0.2, "triangle", 0.14, 220); this.note(220, 0.15, 0.3, "triangle", 0.12, 160); }, // "bwoo-op"
+    pop()     { this.note(280, 0, 0.14, "sine", 0.28, 1400); this.note(1600, 0.1, 0.12, "sine", 0.08); },          // bubble pop
+    win()     { [523, 659, 784, 1047].forEach((f, i) => this.note(f, i * 0.12, 0.35, "triangle", 0.15));
+                this.note(1319, 0.5, 0.7, "sine", 0.12); }                                                           // little fanfare
+  };
+
+
+  /* ---------- B3. "Photo pop" + flying hearts ---------- */
+
+  // Built-in drawings (SVG), used when popPhotos contains "peach", "sunset" or "hearts"
+  const ILLUSTRATIONS = {
+    peach: `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'><defs><linearGradient id='bg' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#FFE8DD'/><stop offset='1' stop-color='#F9C4CC'/></linearGradient><radialGradient id='p' cx='38%' cy='36%' r='72%'><stop offset='0' stop-color='#FFE6CC'/><stop offset='.45' stop-color='#FFB48A'/><stop offset='1' stop-color='#EE6670'/></radialGradient></defs><rect width='240' height='240' fill='url(#bg)'/><ellipse cx='122' cy='212' rx='70' ry='10' fill='#C9707E' opacity='.25'/><path d='M120 66c-48 0-80 36-80 80 0 42 34 66 80 66s80-24 80-66c0-44-32-80-80-80z' fill='url(#p)'/><path d='M118 70c-10 34-8 92 4 138' stroke='#D85A66' stroke-width='3' fill='none' opacity='.35'/><path d='M124 66c14-28 46-36 66-26-10 26-42 36-66 26z' fill='#8CC084'/><path d='M124 66c16-10 34-16 56-22' stroke='#6FA36A' stroke-width='2' fill='none'/><path d='M120 68c-2-14 2-24 9-32' stroke='#7A4A3A' stroke-width='5' stroke-linecap='round' fill='none'/><ellipse cx='88' cy='112' rx='16' ry='10' fill='#fff' opacity='.55' transform='rotate(-25 88 112)'/></svg>`,
+    sunset: `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'><defs><linearGradient id='s' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#A99BC4'/><stop offset='.42' stop-color='#F7A6BB'/><stop offset='.78' stop-color='#FFBE98'/><stop offset='1' stop-color='#FFE4C4'/></linearGradient><radialGradient id='g'><stop offset='0' stop-color='#FFF6E0'/><stop offset='.45' stop-color='#FFD9A8' stop-opacity='.9'/><stop offset='1' stop-color='#FFD9A8' stop-opacity='0'/></radialGradient></defs><rect width='240' height='240' fill='url(#s)'/><circle cx='120' cy='170' r='80' fill='url(#g)'/><circle cx='120' cy='170' r='26' fill='#FFF4E6'/><g fill='#FCD9E0' opacity='.85'><ellipse cx='58' cy='78' rx='52' ry='11'/><ellipse cx='176' cy='56' rx='62' ry='9'/><ellipse cx='160' cy='112' rx='46' ry='8'/><ellipse cx='40' cy='130' rx='36' ry='6'/></g><rect y='196' width='240' height='44' fill='#E3868E' opacity='.6'/><path d='M0 0h28v240H0zM212 0h28v240h-28z' fill='#FFE4D6' opacity='.55'/></svg>`,
+    hearts: `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'><defs><path id='h' d='M0-6C-6-15-20-11-20 0c0 10 12 17 20 24 8-7 20-14 20-24 0-11-14-15-20-6z'/></defs><rect width='240' height='240' fill='#FFF1EA'/><path d='M0 160c60-30 120 20 240-20v100H0z' fill='#FBE3DC'/><g fill='#F6B3A7' stroke='#E4917F' stroke-width='2'><use href='#h' transform='translate(60 60) rotate(-15)'/><use href='#h' transform='translate(140 50) rotate(12)'/><use href='#h' transform='translate(200 100) rotate(-8)'/><use href='#h' transform='translate(100 120) rotate(20) scale(1.3)'/><use href='#h' transform='translate(40 170) rotate(8)'/><use href='#h' transform='translate(170 180) rotate(-20) scale(1.15)'/><use href='#h' transform='translate(110 200) rotate(5) scale(.9)'/></g></svg>`
+  };
+
+  // Turn "peach" into an SVG data URL, or keep a real file name as is
+  function photoSource(nameOrFile) {
+    const svg = ILLUSTRATIONS[nameOrFile];
+    return svg ? "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg) : nameOrFile;
+  }
+
+  let popTimer = null;
+  function popPhoto(caption) {
+    const overlay = $("#photo-pop");
+    const pick = SITE.popPhotos[Math.floor(Math.random() * SITE.popPhotos.length)];
+    overlay.innerHTML = `
+      <figure class="polaroid">
+        <img src="${escapeHTML(photoSource(pick))}" alt="">
+        <figcaption>${escapeHTML(caption)}</figcaption>
+      </figure>`;
+    // Restart the CSS animation: remove the class, force a reflow, add it back
+    overlay.classList.remove("show");
+    void overlay.offsetWidth;
+    overlay.classList.add("show");
+    Sound.pop();
+    clearTimeout(popTimer);
+    popTimer = setTimeout(() => overlay.classList.remove("show"), 1800);
+  }
+
+  // Little hearts that fly out of an element (e.g. the button you just clicked)
+  function burstHearts(fromElement, count = 10) {
+    if (reduceMotion || !fromElement) return;
+    const box = fromElement.getBoundingClientRect();
+    const shapes = ["♥", "✿", "♥", "✦"];
+    for (let i = 0; i < count; i++) {
+      const heart = document.createElement("span");
+      heart.className = "heart";
+      heart.textContent = shapes[i % shapes.length];
+      heart.style.left = box.left + box.width / 2 + "px";
+      heart.style.top = box.top + box.height / 2 + "px";
+      // CSS reads these custom properties in the heart-fly animation
+      heart.style.setProperty("--dx", (Math.random() * 180 - 90).toFixed(0) + "px");
+      heart.style.setProperty("--dy", (-40 - Math.random() * 100).toFixed(0) + "px");
+      heart.style.setProperty("--rot", (Math.random() * 120 - 60).toFixed(0) + "deg");
+      document.body.appendChild(heart);
+      heart.addEventListener("animationend", () => heart.remove());
+    }
+  }
+
+  // Animate a number from 0 up to its target
+  function countUp(element, target) {
+    if (reduceMotion) { element.textContent = target; return; }
+    const start = performance.now();
+    const duration = 900;
+    function tick(now) {
+      const progress = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - progress, 3);     // ease-out
+      element.textContent = Math.round(target * eased);
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+
+  /* ---------- B4. TABS ----------
+     How tab switching works:
+     1. buildTabs() creates one <button role="tab"> and one <section role="tabpanel">
+        per session in SESSIONS.
+     2. Clicking a tab (or using ← → Home End) calls selectTab(id).
+     3. selectTab sets aria-selected="true" on the chosen tab (CSS styles it pink),
+        and toggles the "hidden" attribute so only the matching panel is visible.
+     4. The URL hash (#s2) is updated so you can share a link to a specific tab.     */
+
+  const tablist = $("#tablist");
+  const panelsRoot = $("#panels");
+
+  function buildTabs() {
+    SESSIONS.forEach((session, index) => {
+      // --- the tab button ---
+      const tab = document.createElement("button");
+      tab.type = "button";
+      tab.id = `tab-${session.id}`;
+      tab.className = "tab" + (session.comingSoon ? " is-soon" : "");
+      tab.setAttribute("role", "tab");
+      tab.setAttribute("aria-controls", `panel-${session.id}`);
+      tab.setAttribute("aria-selected", "false");
+      tab.tabIndex = -1;  // only the selected tab is in the Tab order ("roving tabindex")
+      tab.innerHTML = `
+        <span class="tab-num">${escapeHTML(session.tabLabel)}</span>
+        <span class="tab-title">${escapeHTML(session.shortTitle)}</span>`;
+
+      // EVENT LISTENER: when this button is clicked, run selectTab for this session
+      tab.addEventListener("click", () => {
+        Sound.click();
+        selectTab(session.id);
+      });
+      tablist.appendChild(tab);
+
+      // --- the panel ---
+      const panel = document.createElement("section");
+      panel.id = `panel-${session.id}`;
+      panel.className = "panel";
+      panel.setAttribute("role", "tabpanel");
+      panel.setAttribute("aria-labelledby", tab.id);
+      panel.hidden = true;
+      panelsRoot.appendChild(panel);
+
+      if (session.comingSoon) {
+        renderComingSoon(session, panel);
+      } else {
+        renderSessionShell(session, panel);
+        games[session.id] = newGameState(session);
+        render(session);
+      }
+    });
+
+    // One keyboard listener for the whole tab list (event delegation)
+    tablist.addEventListener("keydown", onTabKeydown);
+  }
+
+  function selectTab(id, { focusTab = false } = {}) {
+    SESSIONS.forEach(session => {
+      const tab = $(`#tab-${session.id}`);
+      const panel = $(`#panel-${session.id}`);
+      const isActive = session.id === id;
+
+      tab.setAttribute("aria-selected", String(isActive));
+      tab.tabIndex = isActive ? 0 : -1;
+      panel.hidden = !isActive;
+
+      if (isActive) {
+        // replay the fade/slide-in animation
+        panel.classList.remove("is-entering");
+        void panel.offsetWidth;
+        panel.classList.add("is-entering");
+        // Scroll the tab strip sideways (on phones) so the active tab is visible,
+        // without scrolling the whole page
+        tablist.scrollTo({ left: tab.offsetLeft - 16, behavior: reduceMotion ? "auto" : "smooth" });
+        if (focusTab) tab.focus();
+      }
+    });
+    history.replaceState(null, "", "#" + id);
+  }
+
+  // Arrow keys move between tabs, Home/End jump to first/last (WAI-ARIA tabs pattern)
+  function onTabKeydown(event) {
+    const tabs = [...tablist.querySelectorAll('[role="tab"]')];
+    const current = tabs.indexOf(document.activeElement);
+    if (current === -1) return;
+
+    let next = null;
+    if (event.key === "ArrowRight") next = (current + 1) % tabs.length;
+    if (event.key === "ArrowLeft")  next = (current - 1 + tabs.length) % tabs.length;
+    if (event.key === "Home")       next = 0;
+    if (event.key === "End")        next = tabs.length - 1;
+    if (next === null) return;
+
+    event.preventDefault();
+    selectTab(SESSIONS[next].id, { focusTab: true });
+  }
+
+  function renderComingSoon(session, panel) {
+    panel.innerHTML = `
+      <div class="game-card" style="border-radius: var(--radius-xl)">
+        <div class="soon">
+          <div class="soon-fruit" aria-hidden="true"><span>🍑</span><span>💗</span><span>🍑</span></div>
+          <h2>Coming soon – guest speaker session</h2>
+          <p>${escapeHTML(session.tabLabel)}'s game unlocks after class. Stay peachy!</p>
+          <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+        </div>
+      </div>`;
+  }
+
+  // The coloured session header + an empty "stage" where the game screens appear
+  function renderSessionShell(session, panel) {
+    panel.innerHTML = `
+      <div class="session-head">
+        <div class="chips">
+          <span class="chip">📅 ${escapeHTML(session.date)}</span>
+          <span class="chip">🎤 ${escapeHTML(session.speaker)}</span>
+        </div>
+        <h2 class="session-title">${escapeHTML(session.title)}</h2>
+        <p class="session-summary">${escapeHTML(session.summary)}</p>
+      </div>
+      <div class="game-card">
+        <div class="stage"></div>
+      </div>`;
+  }
+
+
+  /* ---------- B5. GAME STATE ----------
+     Each session has its own state object, stored in games[session.id].
+     Because state is kept per session, you can switch tabs mid-game and
+     come back to exactly where you were.
+
+     screen:        which screen to draw: "intro" | "roundIntro" | "question" | "final"
+     roundIndex:    which round we're in (0 = first)
+     questionIndex: which question inside the round
+     questions:     the current round's questions, shuffled
+     score:         points so far
+     roundScores:   points per round (for the final breakdown)
+     streak:        correct answers in a row (3 → photo pop!)
+     answered:      true once the current question is answered (blocks double clicks)
+     sorted:        for "sort" rounds: what's been dropped in each bucket so far      */
+  const games = {};
+
+  function newGameState(session) {
+    return {
+      screen: "intro",
+      roundIndex: 0,
+      questionIndex: 0,
+      questions: [],
+      score: 0,
+      roundScores: session.rounds.map(() => 0),
+      streak: 0,
+      answered: false,
+      sorted: [[], []]
+    };
+  }
+
+  const pointsFor = round => round.points || 1;
+
+  function maxScore(session) {
+    return session.rounds.reduce((sum, round) => sum + round.items.length * pointsFor(round), 0);
+  }
+
+  /* Every round type is turned into the SAME question shape:
+       { prompt, choices: [...], answer: <index of the correct choice>, explain, ... }
+     That's why one engine can play all round types.                        */
+  function buildQuestions(round) {
+    return shuffle(round.items).map(item => {
+      let choices = [];
+      let answer;
+
+      if (round.type === "match") {
+        choices = round.options;
+        answer = round.options.indexOf(item.answer);
+      } else if (round.type === "higherlower") {
+        choices = ["⬆ Higher", "⬇ Lower"];
+        answer = item.answer === "higher" ? 0 : 1;
+      } else if (round.type === "sort") {
+        choices = round.buckets;
+        answer = round.buckets.indexOf(item.answer);
+      } else if (round.type === "text") {
+        answer = item.answer;
+      }
+
+      // Helpful warning for typos in the data (open the browser console to see it)
+      if (answer === -1) console.warn(`"${item.answer}" is not one of the options in round "${round.title}"`);
+
+      return { ...item, choices, answer };
+    });
+  }
+
+
+  /* ---------- B6. MOVING THROUGH THE GAME ---------- */
+
+  function startGame(session) {
+    games[session.id] = newGameState(session);
+    games[session.id].screen = "roundIntro";
+    render(session, { focus: true });
+  }
+
+  function startRound(session) {
+    const state = games[session.id];
+    const round = session.rounds[state.roundIndex];
+    state.questions = buildQuestions(round);
+    state.questionIndex = 0;
+    state.sorted = [[], []];
+    state.screen = "question";
+    render(session, { focus: true });
+  }
+
+  function nextStep(session) {
+    const state = games[session.id];
+    state.questionIndex++;
+    state.answered = false;
+
+    if (state.questionIndex < state.questions.length) {
+      state.screen = "question";                // more questions in this round
+    } else if (state.roundIndex < session.rounds.length - 1) {
+      state.roundIndex++;                       // next round
+      state.screen = "roundIntro";
+    } else {
+      state.screen = "final";                   // game over!
+    }
+    render(session, { focus: true });
+  }
+
+  // Draw whichever screen the state says we're on
+  function render(session, { focus = false } = {}) {
+    const state = games[session.id];
+    const stage = $(`#panel-${session.id} .stage`);
+
+    if (state.screen === "intro")      renderIntro(session, stage);
+    if (state.screen === "roundIntro") renderRoundIntro(session, stage);
+    if (state.screen === "question")   renderQuestion(session, stage);
+    if (state.screen === "final")      renderFinal(session, stage);
+
+    // Move keyboard focus to the new heading so screen-reader users hear the new screen
+    if (focus) {
+      const heading = $("[data-focus]", stage);
+      if (heading) heading.focus({ preventScroll: true });
+      stage.closest(".game-card").scrollIntoView({ block: "nearest", behavior: reduceMotion ? "auto" : "smooth" });
+    }
+  }
+
+
+  /* ---------- B7. SCREENS ---------- */
+
+  function renderIntro(session, stage) {
+    const roundsHTML = session.rounds.map((round, i) => `
+      <li>
+        <span class="r-emoji" aria-hidden="true">${round.emoji || "🎲"}</span>
+        <span class="r-name">${i + 1}. ${escapeHTML(round.title)}</span>
+        <span class="r-meta">${round.items.length} question${round.items.length > 1 ? "s" : ""} · ${pointsFor(round)} pt each</span>
+      </li>`).join("");
+
+    stage.innerHTML = `
+      <h3 class="stage-heading" tabindex="-1" data-focus>Ready to play? 🍑</h3>
+      <p>${session.rounds.length} rounds, <strong>${maxScore(session)} points</strong> to win. Instant feedback after every answer.</p>
+      <ul class="round-list">${roundsHTML}</ul>
+      <button class="btn btn-primary" type="button" data-action="start">Start the game ▶</button>`;
+
+    // EVENT LISTENER: the start button
+    $('[data-action="start"]', stage).addEventListener("click", () => {
+      Sound.click();
+      startGame(session);
+    });
+  }
+
+  function renderRoundIntro(session, stage) {
+    const state = games[session.id];
+    const round = session.rounds[state.roundIndex];
+
+    stage.innerHTML = `
+      <div class="round-intro">
+        <span class="big-emoji" aria-hidden="true">${round.emoji || "🎲"}</span>
+        <p class="eyebrow">Round ${state.roundIndex + 1} of ${session.rounds.length}</p>
+        <h3 class="stage-heading" tabindex="-1" data-focus>${escapeHTML(round.title)}</h3>
+        <p>${escapeHTML(round.instructions)}</p>
+        <button class="btn btn-primary" type="button" data-action="go">Let's go →</button>
+        ${state.roundIndex > 0 ? `<p class="hint">Score so far: ${state.score} / ${maxScore(session)}</p>` : ""}
+      </div>`;
+
+    $('[data-action="go"]', stage).addEventListener("click", () => {
+      Sound.click();
+      startRound(session);
+    });
+  }
+
+  function renderQuestion(session, stage) {
+    const state = games[session.id];
+    const round = session.rounds[state.roundIndex];
+    const q = state.questions[state.questionIndex];
+    const progress = (state.questionIndex / state.questions.length) * 100;
+
+    // Build the answer area depending on the round type
+    let answerArea = "";
+    if (round.type === "sort") {
+      answerArea = `
+        <div class="sort-board">
+          ${q.choices.map((bucket, i) => `
+            <div class="bucket">
+              <button class="choice" type="button" data-index="${i}">${escapeHTML(bucket)}</button>
+              <ul aria-label="Sorted into ${escapeHTML(bucket)}">
+                ${state.sorted[i].map(text => `<li>${escapeHTML(text)}</li>`).join("")}
+              </ul>
+            </div>`).join("")}
+        </div>`;
+    } else if (round.type === "text") {
+      answerArea = `
+        <form class="text-answer" novalidate>
+          <label for="answer-${session.id}">Your answer</label>
+          <div class="text-row">
+            <input id="answer-${session.id}" type="text" autocomplete="off" spellcheck="false">
+            <button class="btn btn-primary" type="submit">Check ✓</button>
+          </div>
+          ${q.hint ? `<p class="hint">💡 Hint: ${escapeHTML(q.hint)}</p>` : ""}
+        </form>`;
+    } else {
+      answerArea = `
+        ${round.type === "higherlower" ? `
+          <div class="guess-card"><span>Our guess</span><strong>${escapeHTML(q.guess)}</strong><span>Is the real number higher or lower?</span></div>` : ""}
+        <div class="choices choices-${round.type}" role="group" aria-label="Answer options">
+          ${q.choices.map((choice, i) => `<button class="choice" type="button" data-index="${i}">${escapeHTML(choice)}</button>`).join("")}
+        </div>`;
+    }
+
+    const isLastQuestion = state.questionIndex === state.questions.length - 1;
+    const isLastRound = state.roundIndex === session.rounds.length - 1;
+    const nextLabel = !isLastQuestion ? "Next question →" : isLastRound ? "See my results 🎉" : "Next round →";
+
+    stage.innerHTML = `
+      <div class="hud">
+        <span class="hud-round">${round.emoji || ""} ${escapeHTML(round.title)}</span>
+        <div class="progress" role="progressbar" aria-label="Round progress"
+             aria-valuemin="0" aria-valuemax="${state.questions.length}" aria-valuenow="${state.questionIndex}">
+          <span style="width:${progress}%"></span>
+        </div>
+        <span class="score-pill">⭐ <span class="score-num">${state.score}</span> / ${maxScore(session)}</span>
+      </div>
+
+      <p class="q-kicker">Question ${state.questionIndex + 1} of ${state.questions.length}</p>
+      <h3 class="q-prompt" tabindex="-1" data-focus>${escapeHTML(q.prompt)}</h3>
+
+      ${answerArea}
+
+      <div class="feedback" aria-live="polite"></div>
+      <div class="q-actions">
+        <button class="btn btn-primary" type="button" data-action="next" hidden>${nextLabel}</button>
+      </div>`;
+
+    /* EVENT LISTENERS for the answers.
+       Each choice button gets a "click" listener. When clicked, it tells
+       checkAnswer which index was picked. The text form listens for "submit"
+       (fires on button click AND on pressing Enter in the input).          */
+    stage.querySelectorAll(".choice").forEach(button => {
+      button.addEventListener("click", () => {
+        const picked = Number(button.dataset.index);
+        checkAnswer(session, picked === q.answer, button, picked);
+      });
+    });
+
+    const form = $(".text-answer", stage);
+    if (form) {
+      form.addEventListener("submit", event => {
+        event.preventDefault();                  // stop the page from reloading
+        const input = $("input", form);
+        if (!input.value.trim()) { input.focus(); return; }
+        const guess = normalise(input.value);
+        const isRight = q.accept.some(ok => guess === normalise(ok) || guess.includes(normalise(ok)));
+        input.disabled = true;
+        $("button", form).disabled = true;
+        checkAnswer(session, isRight, $("button", form), null);
+      });
+    }
+
+    $('[data-action="next"]', stage).addEventListener("click", () => {
+      Sound.click();
+      nextStep(session);
+    });
+  }
+
+  /* checkAnswer: the heart of the game.
+     1. Ignore extra clicks once answered.
+     2. Update score + streak in the state object.
+     3. Show colours, feedback text, sounds and animations.
+     4. Reveal the Next button and move focus to it.                       */
+  function checkAnswer(session, isRight, clickedButton, pickedIndex) {
+    const state = games[session.id];
+    if (state.answered) return;          // guard against double-clicks
+    state.answered = true;
+
+    const round = session.rounds[state.roundIndex];
+    const q = state.questions[state.questionIndex];
+    const stage = $(`#panel-${session.id} .stage`);
+    const points = pointsFor(round);
+
+    // --- 2. update state ---
+    if (isRight) {
+      state.score += points;
+      state.roundScores[state.roundIndex] += points;
+      state.streak++;
+    } else {
+      state.streak = 0;
+    }
+
+    // --- 3a. lock and colour the buttons ---
+    const choiceButtons = [...stage.querySelectorAll(".choice")];
+    choiceButtons.forEach((button, i) => {
+      button.disabled = true;
+      if (i === q.answer) button.classList.add("is-correct");
+      if (i === pickedIndex && !isRight) button.classList.add("is-wrong");
+    });
+
+    // --- 3b. sort rounds: drop the statement into the correct bucket ---
+    if (round.type === "sort") {
+      state.sorted[q.answer].push(q.prompt);
+      const list = stage.querySelectorAll(".bucket ul")[q.answer];
+      const li = document.createElement("li");
+      li.className = "chip-in";
+      li.textContent = q.prompt;
+      list.appendChild(li);
+    }
+
+    // --- 3c. feedback text ---
+    const correctLabel = round.type === "text" ? q.answer : q.choices[q.answer];
+    const revealLine = q.reveal ? `Real answer: <strong>${escapeHTML(q.reveal)}</strong>. ` : "";
+    $(".feedback", stage).innerHTML = isRight
+      ? `<div class="feedback-box ok">
+           <p class="fb-title">✓ Correct! +${points}</p>
+           <p>${revealLine}${escapeHTML(q.explain)}</p>
+         </div>`
+      : `<div class="feedback-box bad">
+           <p class="fb-title">✗ Not quite. It's “${escapeHTML(correctLabel)}”.</p>
+           <p>${revealLine}${escapeHTML(q.explain)}</p>
+         </div>`;
+
+    // --- 3d. score counter bump, sounds, hearts, photo pop ---
+    const scorePill = $(".score-pill", stage);
+    $(".score-num", stage).textContent = state.score;
+    if (isRight) {
+      scorePill.classList.add("bump");
+      Sound.correct();
+      burstHearts(clickedButton);
+      if (state.streak > 0 && state.streak % SITE.streakForPop === 0) {
+        setTimeout(() => popPhoto(`${state.streak} in a row! 🍑`), 350);
+      }
+    } else {
+      Sound.wrong();
+    }
+
+    // --- 4. show "Next" and move focus to it (keyboard users can just press Enter) ---
+    const nextButton = $('[data-action="next"]', stage);
+    nextButton.hidden = false;
+    nextButton.focus({ preventScroll: true });
+    nextButton.scrollIntoView({ block: "nearest", behavior: reduceMotion ? "auto" : "smooth" });
+  }
+
+  function renderFinal(session, stage) {
+    const state = games[session.id];
+    const max = maxScore(session);
+    const percent = Math.round((state.score / max) * 100);
+
+    // Pick the highest badge whose "min" we reached
+    const badge = [...session.badges].sort((a, b) => b.min - a.min).find(b => percent >= b.min);
+
+    const breakdown = session.rounds.map((round, i) => `
+      <li><span>${round.emoji || ""} ${escapeHTML(round.title)}</span>
+          <strong>${state.roundScores[i]} / ${round.items.length * pointsFor(round)}</strong></li>`).join("");
+
+    stage.innerHTML = `
+      <div class="final">
+        <p class="eyebrow">Session complete</p>
+        <div class="badge" aria-hidden="true"><span>${badge.emoji}</span></div>
+        <h3 class="badge-name" tabindex="-1" data-focus>${escapeHTML(badge.name)}</h3>
+        <p class="final-score"><span class="count">0</span> / ${max} points · ${percent}%</p>
+        <p class="final-blurb">${escapeHTML(badge.blurb)}</p>
+        <ul class="breakdown">${breakdown}</ul>
+        <blockquote class="takeaway">
+          <p class="eyebrow">Key takeaway</p>
+          ${escapeHTML(session.takeaway)}
+        </blockquote>
+        <button class="btn btn-primary" type="button" data-action="again">↻ Play again</button>
+      </div>`;
+
+    countUp($(".count", stage), state.score);
+    Sound.win();
+    setTimeout(() => {
+      popPhoto(`${badge.name} ${badge.emoji}`);
+      burstHearts($(".badge", stage), 18);
+    }, 450);
+
+    $('[data-action="again"]', stage).addEventListener("click", () => {
+      Sound.click();
+      startGame(session);   // fresh state + new shuffle
+    });
+  }
+
+
+  /* ---------- B8. SOUND TOGGLE ---------- */
+  function setupSoundToggle() {
+    const button = $("#sound-toggle");
+    const update = () => {
+      button.setAttribute("aria-pressed", String(Sound.enabled));
+      $(".label", button).textContent = Sound.enabled ? "Sound on" : "Sound off";
+      $("span", button).textContent = Sound.enabled ? "🔊" : "🔇";
+    };
+    button.addEventListener("click", () => {
+      Sound.enabled = !Sound.enabled;
+      store.set("gamehub-sound", Sound.enabled ? "on" : "off");
+      update();
+      Sound.click();
+    });
+    update();
+  }
+
+
+  /* ---------- B9. START EVERYTHING ---------- */
+  function init() {
+    $("#built-by").textContent = SITE.builtBy;
+    setupSoundToggle();
+    buildTabs();
+
+    // Open the tab from the URL (#s2), otherwise the first session
+    const fromHash = location.hash.slice(1);
+    const startId = SESSIONS.some(s => s.id === fromHash) ? fromHash : SESSIONS[0].id;
+    selectTab(startId);
+  }
+
+  init();
+  </script>
+</body>
+</html>
